@@ -2,9 +2,8 @@
 
 ## Getting Started
 
-Run ```bash
+Run
+```
 npm install
-
 ```
 
-```
