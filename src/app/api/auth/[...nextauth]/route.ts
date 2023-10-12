@@ -1,5 +1,26 @@
 import NextAuth from "next-auth"
+import { PrismaClient } from ".prisma/client";
 import CredentialsProvider from "next-auth/providers/credentials"
+import { prisma } from '../../../../lib/prismaClient';
+
+async function checkCredentials(providedEmail: string | undefined, providedPassword: string | undefined) {
+  if (!providedEmail || !providedPassword) return null;
+
+  const user = await prisma.user.findUnique({
+    where: {
+      email: providedEmail,
+    },
+  });
+
+  if (user?.encrypted_password === providedPassword) {
+    return {
+      id: user?.id,
+      username: user.username, 
+      email: user.email,
+    }
+  }
+  return null;
+}
 
 const nextAuthConfig = {
   providers: [
@@ -12,8 +33,8 @@ const nextAuthConfig = {
       },
       // TODO Implement logic for checking user in database
       async authorize(credentials, req) {
-        const mockUser = { id: '1', name: 'Jonny', email: 'hello@mail.com' }
-        return mockUser;
+        const user = await checkCredentials(credentials?.email, credentials?.password);
+        return user;
       }
     })
   ],
@@ -22,8 +43,6 @@ const nextAuthConfig = {
     signIn: '/login',
   }
 }
-
-
 
 const handler = NextAuth(nextAuthConfig);
 
