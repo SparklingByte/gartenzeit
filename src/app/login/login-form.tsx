@@ -1,39 +1,31 @@
 'use client';
 
-import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 
 export default function LoginForm() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+        const email = formData.get('email');
+        const password = formData.get('password');
         signIn('credentials', {
           email,
           password,
           redirect: true,
-          callbackUrl: '/',
         });
       }}
     >
       <input
         type='email'
+        name='email'
         placeholder='Your Email'
-        onChange={(e) => {
-          setEmail(e.target.value);
-        }}
-        value={email}
       ></input>
       <input
         type='password'
+        name='password'
         placeholder='Your password'
-        onChange={(e) => {
-          setPassword(e.target.value);
-        }}
-        value={password}
       ></input>
       <button type='submit'>Login</button>
     </form>
