@@ -1,29 +1,42 @@
 'use client';
 
+import { signIn } from 'next-auth/react';
+
 async function handleFormSubmit(form: HTMLFormElement) {
   const formData = new FormData(form);
   const email = formData.get('email');
   const username = formData.get('username');
   const password = formData.get('password');
-  const passwordConfirm = formData.get('passwordConfirm');
+  const passwordConfirmation = formData.get('passwordConfirm');
 
   // Send POST request to api to try to create a new user
-  const userRegistrationFetch = await fetch('/api/auth/register', {
+  const res = await fetch('/api/auth/register', {
+    headers: {
+      'Content-Type': 'application/json',
+    },
     method: 'POST',
     body: JSON.stringify({
       email,
       username,
       password,
-      passwordConfirm,
+      passwordConfirmation,
     }),
   });
 
   // Convert the body of the response from the server into object
   // and show according message
-  const userRegistrationResponse = await userRegistrationFetch.json();
+  const { user, message } = await res.json();
 
-  if (userRegistrationFetch.ok) {
-    console.log(userRegistrationResponse.message);
+  // Login user if API reponds with user object or log error message
+  if (user) {
+    signIn('credentials', {
+      email: user.email,
+      password,
+      callbackUrl: window.location.origin,
+      redirect: true,
+    });
+  } else {
+    console.error(`[GARTENZEIT] ${message}`);
   }
 }
 
