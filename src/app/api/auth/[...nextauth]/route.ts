@@ -1,7 +1,7 @@
 import NextAuth from "next-auth"
-import { PrismaClient } from ".prisma/client";
 import CredentialsProvider from "next-auth/providers/credentials"
 import { prisma } from '../../../../lib/prismaClient';
+import bcrypt from 'bcrypt';
 
 async function checkCredentials(providedEmail: string | undefined, providedPassword: string | undefined) {
   if (!providedEmail || !providedPassword) return null;
@@ -12,7 +12,13 @@ async function checkCredentials(providedEmail: string | undefined, providedPassw
     },
   });
 
-  if (user?.encrypted_password === providedPassword) {
+  if (!user) {
+    return null;
+  }
+
+  const passwordsMatch = bcrypt.compare(providedPassword, user.encrypted_password);
+
+  if (passwordsMatch) {
     return {
       id: user?.id,
       username: user.username, 
@@ -31,7 +37,6 @@ const nextAuthConfig = {
         email: { label: 'Email', type: 'email', placeholder: 'Susi123@mail.com' },
         password: { label: 'Password', type: 'password' },
       },
-      // TODO Implement logic for checking user in database
       async authorize(credentials, req) {
         const user = await checkCredentials(credentials?.email, credentials?.password);
         return user;
