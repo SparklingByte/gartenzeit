@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import bcrypt from 'bcrypt';
 
-const userDataSchema = z
+export const userDataSchema = z
   .object({
     email: z.string().email('Invalid email provided'),
     username: z
