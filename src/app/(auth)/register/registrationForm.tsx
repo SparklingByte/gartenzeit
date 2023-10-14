@@ -45,7 +45,6 @@ export default function UserRegistrationForm() {
     const parsedUserData = userDataSchema.safeParse(submittedUserData);
 
     if (parsedUserData.success === false) {
-      // TODO get erros and show them to users next below the input field
       setInputErrors(parsedUserData.error.format());
       return;
     }
@@ -88,55 +87,64 @@ export default function UserRegistrationForm() {
         e.preventDefault();
         handleFormSubmit(e.currentTarget);
       }}
+      className='bg-red-600'
     >
-      <label htmlFor='username'>Your desired username</label>
-      <input
-        id='username'
-        name='username'
-        required
-      ></input>
-      {inputErrors?.username
-        ? inputErrors.username._errors.map((error) => {
-            return <span key={`error-${error}`}>{error}</span>;
-          })
-        : ''}
+      <div>
+        <label htmlFor='username'>Your desired username</label>
+        <input
+          id='username'
+          name='username'
+          required
+        ></input>
+        {inputErrors?.username
+          ? inputErrors.username._errors.map((error) => {
+              return <span key={`error-${error}`}>{error}</span>;
+            })
+          : ''}
+      </div>
 
-      <label htmlFor='email'>Your email</label>
-      <input
-        id='email'
-        type='email'
-        name='email'
-        required
-      ></input>
-      {inputErrors?.email
-        ? inputErrors.email._errors.map((error) => {
-            return <span key={`error-${error}`}>{error}</span>;
-          })
-        : ''}
+      <div>
+        <label htmlFor='email'>Your email</label>
+        <input
+          id='email'
+          type='email'
+          name='email'
+          required
+        ></input>
+        {inputErrors?.email
+          ? inputErrors.email._errors.map((error) => {
+              return <span key={`error-${error}`}>{error}</span>;
+            })
+          : ''}
+      </div>
 
-      <label htmlFor='password'>Your password</label>
-      <input
-        id='password'
-        name='password'
-        type='password'
-      ></input>
-      {inputErrors?.password
-        ? inputErrors.password._errors.map((error) => {
-            return <span key={`error-${error}`}>{error}</span>;
-          })
-        : ''}
+      <div>
+        <label htmlFor='password'>Your password</label>
+        <input
+          id='password'
+          name='password'
+          type='password'
+        ></input>
+        {inputErrors?.password
+          ? inputErrors.password._errors.map((error) => {
+              return <span key={`error-${error}`}>{error}</span>;
+            })
+          : ''}
+      </div>
 
-      <label htmlFor='passwordConfirm'>Retype your password</label>
-      <input
-        id='passwordConfirmation'
-        name='passwordConfirmation'
-        type='password'
-      ></input>
-      {inputErrors?.passwordConfirmation
-        ? inputErrors.passwordConfirmation._errors.map((error) => {
-            return <span key={`error-${error}`}>{error}</span>;
-          })
-        : ''}
+      <div>
+        <label htmlFor='passwordConfirm'>Retype your password</label>
+        <input
+          id='passwordConfirmation'
+          name='passwordConfirmation'
+          type='password'
+        ></input>
+        {inputErrors?.passwordConfirmation
+          ? inputErrors.passwordConfirmation._errors.map((error) => {
+              return <span key={`error-${error}`}>{error}</span>;
+            })
+          : ''}
+      </div>
 
       <button type='submit'>Create account</button>
     </form>
