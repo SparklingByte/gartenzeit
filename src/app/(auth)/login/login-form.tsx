@@ -3,6 +3,7 @@
 import { signIn } from 'next-auth/react';
 import { z } from 'zod';
 import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 const userLoginDataSchema = z.object({
   email: z.string().email('Please provide a valid email like hello@mail.com'),
@@ -19,6 +20,10 @@ type userLoginDataType = z.infer<typeof userLoginDataSchema>;
 export default function LoginForm() {
   const [inputErrors, setInputErrors] =
     useState<z.ZodFormattedError<{ email: string; password: string }>>();
+
+  const searchParams = useSearchParams();
+  const callbackUrlParam = searchParams.get('callbackUrl');
+  const errorCodeParam = searchParams.get('error');
 
   async function validateUserLoginInput(inputData: userLoginDataType) {
     const parsedUserLoginData = userLoginDataSchema.safeParse({
@@ -41,6 +46,7 @@ export default function LoginForm() {
       signIn('credentials', {
         email: validatedUserInput.email,
         password: validatedUserInput.password,
+        callbackUrl: callbackUrlParam || undefined,
         redirect: true,
       });
     }
