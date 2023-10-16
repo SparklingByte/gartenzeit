@@ -1,11 +1,12 @@
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
-import { prisma } from '../../../../lib/prismaClient';
+import { prisma } from '@/lib/prismaClient';
 import bcrypt from 'bcrypt';
 
 async function checkCredentials(providedEmail: string | undefined, providedPassword: string | undefined) {
   if (!providedEmail || !providedPassword) return null;
 
+  // Try to get user from database
   const user = await prisma.user.findUnique({
     where: {
       email: providedEmail,
@@ -16,6 +17,7 @@ async function checkCredentials(providedEmail: string | undefined, providedPassw
     return null;
   }
 
+  // Check if the provided password from the user matches the password in database
   const passwordsMatch = await bcrypt.compare(providedPassword, user.encrypted_password || '');
 
   if (passwordsMatch) {
