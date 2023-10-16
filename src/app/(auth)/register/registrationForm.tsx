@@ -2,6 +2,7 @@
 
 import { z } from 'zod';
 import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 
 export default function UserRegistrationForm() {
@@ -13,6 +14,10 @@ export default function UserRegistrationForm() {
       passwordConfirmation: string;
     }>
   >();
+  const [registerError, setRegisterError] = useState<{
+    error: boolean;
+    message: string | null;
+  }>();
 
   async function handleFormSubmit(form: HTMLFormElement) {
     const userFormData = new FormData(form);
@@ -76,8 +81,7 @@ export default function UserRegistrationForm() {
         redirect: true,
       });
     } else {
-      // TODO Show error for user
-      console.error(`[GARTENZEIT] ${message}`);
+      setRegisterError({ error: true, message });
     }
   }
 
@@ -85,10 +89,12 @@ export default function UserRegistrationForm() {
     <form
       onSubmit={(e) => {
         e.preventDefault();
+        setRegisterError({ error: false, message: null });
         handleFormSubmit(e.currentTarget);
       }}
       className='bg-red-600'
     >
+      {registerError?.error ? <h1>{registerError.message}</h1> : ''}
       <div>
         <label htmlFor='username'>Your desired username</label>
         <input
