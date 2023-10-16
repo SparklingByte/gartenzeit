@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import NextAuthProvider from './context/NextAuthProvider';
+import './globals.css';
 
 export const metadata: Metadata = {
   title: 'Gartenzeit',
