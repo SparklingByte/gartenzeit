@@ -63,14 +63,19 @@ export default function LoginForm() {
         });
       }}
     >
+      {errorCodeParam === 'CredentialsSignin' ? (
+        <h1>The email and password do not match</h1>
+      ) : (
+        ''
+      )}
       <input
         type='email'
         name='email'
         placeholder='Your Email'
       ></input>
       {inputErrors?.email
-        ? inputErrors.email._errors.map((error) => {
-            return <span key={`error-${error}`}>{error}</span>;
+        ? inputErrors.email._errors.map((inputError) => {
+            return <span key={`error-${inputError}`}>{inputError}</span>;
           })
         : ''}
       <input
