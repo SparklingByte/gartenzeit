@@ -19,10 +19,8 @@ export const userDataSchema = z
     return data.password === data.passwordConfirmation;
   }, 'The passwords do not match');
 
-export type userCreationDataType = z.infer<typeof userDataSchema>;
-
 export async function POST(req: NextRequest) {
-  const userData: userCreationDataType = await req.json();
+  const userData = await req.json();
   const parsedUserData = userDataSchema.safeParse(userData);
 
   if (parsedUserData.success === false) {
