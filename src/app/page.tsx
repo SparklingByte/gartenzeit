@@ -7,7 +7,7 @@ export default function Home() {
   const username = session?.user?.email || 'No user logged in';
 
   return (
-    <main className='bg-black'>
+    <main>
       <h1>Hello and welcome {username}</h1>
       {status === 'authenticated' ? (
         <button onClick={() => signOut()}>Logout</button>
