@@ -16,7 +16,7 @@ async function checkCredentials(providedEmail: string | undefined, providedPassw
     return null;
   }
 
-  const passwordsMatch = bcrypt.compare(providedPassword, user.encrypted_password);
+  const passwordsMatch = await bcrypt.compare(providedPassword, user.encrypted_password || '');
 
   if (passwordsMatch) {
     return {
@@ -37,7 +37,7 @@ const nextAuthConfig = {
         email: { label: 'Email', type: 'email', placeholder: 'Susi123@mail.com' },
         password: { label: 'Password', type: 'password' },
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         const user = await checkCredentials(credentials?.email, credentials?.password);
         return user;
       }
