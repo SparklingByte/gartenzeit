@@ -58,8 +58,8 @@ export default function LoginForm() {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         handleUserSignIn({
-          email: formData.get('email'),
-          password: formData.get('password'),
+          email: String(formData.get('email')) || '',
+          password: String(formData.get('password')) || '',
         });
       }}
     >
