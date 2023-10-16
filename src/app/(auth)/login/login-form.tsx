@@ -1,9 +1,11 @@
 'use client';
 
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import { z } from 'zod';
 import { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import AuthenticationAlert from '@/components/AuthenticationAlert';
+import SingleLineInput from '@/components/input-fields/SingleLineInput';
 
 const userLoginDataSchema = z.object({
   email: z.string().email('Please provide a valid email like hello@mail.com'),
@@ -20,6 +22,7 @@ type userLoginDataType = z.infer<typeof userLoginDataSchema>;
 export default function LoginForm() {
   const [inputErrors, setInputErrors] =
     useState<z.ZodFormattedError<{ email: string; password: string }>>();
+  const { data: session, status } = useSession();
 
   const searchParams = useSearchParams();
   const callbackUrlParam = searchParams.get('callbackUrl');
@@ -62,34 +65,63 @@ export default function LoginForm() {
           password: String(formData.get('password')) || '',
         });
       }}
+      className='grid gap-3 flex-wrap'
     >
-      {errorCodeParam === 'CredentialsSignin' ? (
-        <h1>The email and password do not match</h1>
-      ) : (
-        ''
-      )}
-      <input
-        type='email'
-        name='email'
-        placeholder='Your Email'
-      ></input>
-      {inputErrors?.email
-        ? inputErrors.email._errors.map((inputError) => {
-            return <span key={`error-${inputError}`}>{inputError}</span>;
+      {errorCodeParam === 'CredentialsSignin'
+        ? AuthenticationAlert({
+            status: 'error',
+            message: 'Invalid credentials',
           })
         : ''}
-      <input
-        type='password'
-        name='password'
-        placeholder='Your password'
-      ></input>
-      {inputErrors?.password
-        ? inputErrors.password._errors.map((error) => {
-            return <span key={`error-${error}`}>{error}</span>;
-          })
-        : ''}
+      <div className='grid gap-1'>
+        <label htmlFor='email'>Your Email</label>
+        <SingleLineInput
+          id='email'
+          type='email'
+          name='email'
+          placeholder='Your Email'
+        ></SingleLineInput>
+        {inputErrors?.email
+          ? inputErrors.email._errors.map((inputError) => {
+              return (
+                <p
+                  className='bg-red-800 text-white p-3 rounded-md'
+                  key={`error-${inputError}`}
+                >
+                  {inputError}
+                </p>
+              );
+            })
+          : ''}
+      </div>
+      <div className='grid gap-1'>
+        <label htmlFor='password'>Your Password</label>
+        <SingleLineInput
+          id='password'
+          type='password'
+          name='password'
+          placeholder='Your password'
+        ></SingleLineInput>
+        {inputErrors?.password
+          ? inputErrors.password._errors.map((error) => {
+              return (
+                <p
+                  className='bg-red-800 text-white p-3 rounded-md'
+                  key={`error-${error}`}
+                >
+                  {error}
+                </p>
+              );
+            })
+          : ''}
+      </div>
 
-      <button type='submit'>Login</button>
+      <button
+        className='bg-green-900 p-2 text-white rounded-md'
+        type='submit'
+      >
+        {status === 'loading' ? 'Loading...' : 'Login'}
+      </button>
     </form>
   );
 }
