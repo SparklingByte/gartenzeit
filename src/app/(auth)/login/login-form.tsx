@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import AuthenticationAlert from '@/components/AuthenticationAlert';
 import SingleLineInput from '@/components/input-fields/SingleLineInput';
+import InputContainer from '@/components/form/InputContainer';
 
 const userLoginDataSchema = z.object({
   email: z.string().email('Please provide a valid email like hello@mail.com'),
@@ -65,7 +66,7 @@ export default function LoginForm() {
           password: String(formData.get('password')) || '',
         });
       }}
-      className='grid gap-3 flex-wrap'
+      className='grid gap-3'
     >
       {errorCodeParam === 'CredentialsSignin'
         ? AuthenticationAlert({
@@ -73,7 +74,7 @@ export default function LoginForm() {
             message: 'Invalid credentials',
           })
         : ''}
-      <div className='grid gap-1'>
+      <InputContainer>
         <label htmlFor='email'>Your Email</label>
         <SingleLineInput
           id='email'
@@ -93,8 +94,8 @@ export default function LoginForm() {
               );
             })
           : ''}
-      </div>
-      <div className='grid gap-1'>
+      </InputContainer>
+      <InputContainer>
         <label htmlFor='password'>Your Password</label>
         <SingleLineInput
           id='password'
@@ -114,7 +115,7 @@ export default function LoginForm() {
               );
             })
           : ''}
-      </div>
+      </InputContainer>
 
       <button
         className='bg-green-900 p-2 text-white rounded-md'
