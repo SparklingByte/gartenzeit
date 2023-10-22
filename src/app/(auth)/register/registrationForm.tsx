@@ -2,8 +2,11 @@
 
 import { z } from 'zod';
 import { useState } from 'react';
-import { useSearchParams } from 'next/navigation';
 import { signIn } from 'next-auth/react';
+import SingleLineInput from '@/components/input-fields/SingleLineInput';
+import InputContainer from '@/components/form/InputContainer';
+import PrimaryButton from '@/components/buttons/PrimaryButton';
+import AuthenticationAlert from '@/components/AuthenticationAlert';
 
 export default function UserRegistrationForm() {
   const [inputErrors, setInputErrors] = useState<
@@ -50,6 +53,14 @@ export default function UserRegistrationForm() {
     const parsedUserData = userDataSchema.safeParse(submittedUserData);
 
     if (parsedUserData.success === false) {
+      const formattedErrors = parsedUserData.error.format();
+
+      // Add the password match error message into passwordConfirmation property
+      if (formattedErrors._errors) {
+        formattedErrors.passwordConfirmation?._errors.push(
+          formattedErrors._errors[0],
+        );
+      }
       setInputErrors(parsedUserData.error.format());
       return;
     }
@@ -90,69 +101,135 @@ export default function UserRegistrationForm() {
       onSubmit={(e) => {
         e.preventDefault();
         setRegisterError({ error: false, message: null });
+        setInputErrors(undefined);
         handleFormSubmit(e.currentTarget);
       }}
-      className='bg-red-600'
+      className='grid gap-3'
     >
-      {registerError?.error ? <h1>{registerError.message}</h1> : ''}
-      <div>
-        <label htmlFor='username'>Your desired username</label>
-        <input
-          id='username'
-          name='username'
-          required
-        ></input>
-        {inputErrors?.username
-          ? inputErrors.username._errors.map((error) => {
-              return <span key={`error-${error}`}>{error}</span>;
-            })
-          : ''}
+      {registerError?.error ? (
+        <AuthenticationAlert
+          message={registerError.message || ''}
+          status='error'
+        ></AuthenticationAlert>
+      ) : (
+        ''
+      )}
+      <div className='mb-5 grid gap-3'>
+        <InputContainer>
+          <label
+            className='mb-2'
+            htmlFor='username'
+          >
+            Your desired username
+          </label>
+          <SingleLineInput
+            id='username'
+            name='username'
+            placeholder='E.g. Lilly142'
+            required
+          ></SingleLineInput>
+          {inputErrors?.username
+            ? inputErrors.username._errors.map((error) => {
+                return (
+                  <p
+                    className='bg-red-800 text-white p-3 rounded-md'
+                    key={`error-${error}`}
+                  >
+                    {error}
+                  </p>
+                );
+              })
+            : ''}
+        </InputContainer>
+        <InputContainer>
+          <label
+            className='mb-2'
+            htmlFor='email'
+          >
+            Your email
+          </label>
+          <SingleLineInput
+            id='email'
+            type='email'
+            name='email'
+            required
+          ></SingleLineInput>
+          {inputErrors?.email
+            ? inputErrors.email._errors.map((error) => {
+                return (
+                  <p
+                    className='bg-red-800 text-white p-3 rounded-md'
+                    key={`error-${error}`}
+                  >
+                    {error}
+                  </p>
+                );
+              })
+            : ''}
+        </InputContainer>
+        <InputContainer>
+          <label
+            className='mb-2'
+            htmlFor='password'
+          >
+            Your password
+          </label>
+          <SingleLineInput
+            id='password'
+            name='password'
+            type='password'
+          ></SingleLineInput>
+          {inputErrors?.password
+            ? inputErrors.password._errors.map((error) => {
+                return (
+                  <p
+                    className='bg-red-800 text-white p-3 rounded-md'
+                    key={`error-${error}`}
+                  >
+                    {error}
+                  </p>
+                );
+              })
+            : ''}
+        </InputContainer>
+        <InputContainer>
+          <label
+            className='mb-2'
+            htmlFor='passwordConfirm'
+          >
+            Retype your password
+          </label>
+          <SingleLineInput
+            id='passwordConfirmation'
+            name='passwordConfirmation'
+            type='password'
+          ></SingleLineInput>
+          {inputErrors?.passwordConfirmation
+            ? inputErrors.passwordConfirmation._errors.map((error) => {
+                return (
+                  <p
+                    className='bg-red-800 text-white p-3 rounded-md'
+                    key={`error-${error}`}
+                  >
+                    {error}
+                  </p>
+                );
+              })
+            : ''}
+          {inputErrors?._errors ? (
+            <p
+              className='bg-red-800 text-white p-3 rounded-md'
+              key={`error-${inputErrors._errors[0]}`}
+            >
+              {inputErrors._errors[0]}
+            </p>
+          ) : (
+            ''
+          )}
+        </InputContainer>
       </div>
 
-      <div>
-        <label htmlFor='email'>Your email</label>
-        <input
-          id='email'
-          type='email'
-          name='email'
-          required
-        ></input>
-        {inputErrors?.email
-          ? inputErrors.email._errors.map((error) => {
-              return <span key={`error-${error}`}>{error}</span>;
-            })
-          : ''}
-      </div>
-
-      <div>
-        <label htmlFor='password'>Your password</label>
-        <input
-          id='password'
-          name='password'
-          type='password'
-        ></input>
-        {inputErrors?.password
-          ? inputErrors.password._errors.map((error) => {
-              return <span key={`error-${error}`}>{error}</span>;
-            })
-          : ''}
-      </div>
-
-      <div>
-        <label htmlFor='passwordConfirm'>Retype your password</label>
-        <input
-          id='passwordConfirmation'
-          name='passwordConfirmation'
-          type='password'
-        ></input>
-        {inputErrors?.passwordConfirmation
-          ? inputErrors.passwordConfirmation._errors.map((error) => {
-              return <span key={`error-${error}`}>{error}</span>;
-            })
-          : ''}
-      </div>
-
-      <button type='submit'>Create account</button>
+      <PrimaryButton type='submit'>{"Let's Go"}</PrimaryButton>
     </form>
   );
 }
