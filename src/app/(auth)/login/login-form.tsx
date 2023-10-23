@@ -5,8 +5,7 @@ import { z } from 'zod';
 import { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import AuthenticationAlert from '@/components/AuthenticationAlert';
-import SingleLineInput from '@/components/input-fields/SingleLineInput';
-import InputContainer from '@/components/form/InputContainer';
+import SingleLineInput from '@/components/form/input/SingleLineInput';
 
 const userLoginDataSchema = z.object({
   email: z.string().email('Please provide a valid email like hello@mail.com'),
@@ -74,37 +73,24 @@ export default function LoginForm() {
             message: 'Invalid credentials',
           })
         : ''}
-      <InputContainer>
-        <SingleLineInput
-          id='email'
-          type='email'
-          name='email'
-          placeholder='Your Email'
-          label='Ya Email'
-          errorMessages={inputErrors?.email ? inputErrors.email._errors : []}
-        ></SingleLineInput>
-      </InputContainer>
-      <InputContainer>
-        <label htmlFor='password'>Your Password</label>
-        <SingleLineInput
-          id='password'
-          type='password'
-          name='password'
-          placeholder='Your password'
-        ></SingleLineInput>
-        {inputErrors?.password
-          ? inputErrors.password._errors.map((error) => {
-              return (
-                <p
-                  className='bg-red-800 text-white p-3 rounded-md'
-                  key={`error-${error}`}
-                >
-                  {error}
-                </p>
-              );
-            })
-          : ''}
-      </InputContainer>
+      <SingleLineInput
+        id='email'
+        type='email'
+        name='email'
+        placeholder='Your Email'
+        label='Ya Email'
+        errorMessages={inputErrors?.email ? inputErrors.email._errors : []}
+      ></SingleLineInput>
+      <label htmlFor='password'>Your Password</label>
+      <SingleLineInput
+        id='password'
+        label='Your Password'
+        type='password'
+        name='password'
+        errorMessages={
+          inputErrors?.password ? inputErrors.password._errors : undefined
+        }
+      ></SingleLineInput>
 
       <button
         className='bg-green-900 p-2 text-white rounded-md'
