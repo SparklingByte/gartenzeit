@@ -3,8 +3,7 @@
 import { z } from 'zod';
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
-import SingleLineInput from '@/components/input-fields/SingleLineInput';
-import InputContainer from '@/components/form/InputContainer';
+import SingleLineInput from '@/components/form/input/SingleLineInput';
 import PrimaryButton from '@/components/buttons/PrimaryButton';
 import AuthenticationAlert from '@/components/AuthenticationAlert';
 
@@ -96,140 +95,49 @@ export default function UserRegistrationForm() {
     }
   }
 
-  return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        setRegisterError({ error: false, message: null });
-        setInputErrors(undefined);
-        handleFormSubmit(e.currentTarget);
-      }}
-      className='grid gap-3'
-    >
-      {registerError?.error ? (
-        <AuthenticationAlert
-          message={registerError.message || ''}
-          status='error'
-        ></AuthenticationAlert>
-      ) : (
-        ''
-      )}
-      <div className='mb-5 grid gap-3'>
-        <InputContainer>
-          <label
-            className='mb-2'
-            htmlFor='username'
-          >
-            Your desired username
-          </label>
-          <SingleLineInput
-            id='username'
-            name='username'
-            placeholder='E.g. Lilly142'
-            required
-          ></SingleLineInput>
-          {inputErrors?.username
-            ? inputErrors.username._errors.map((error) => {
-                return (
-                  <p
-                    className='bg-red-800 text-white p-3 rounded-md'
-                    key={`error-${error}`}
-                  >
-                    {error}
-                  </p>
-                );
-              })
-            : ''}
-        </InputContainer>
-        <InputContainer>
-          <label
-            className='mb-2'
-            htmlFor='email'
-          >
-            Your email
-          </label>
-          <SingleLineInput
-            id='email'
-            type='email'
-            name='email'
-            required
-          ></SingleLineInput>
-          {inputErrors?.email
-            ? inputErrors.email._errors.map((error) => {
-                return (
-                  <p
-                    className='bg-red-800 text-white p-3 rounded-md'
-                    key={`error-${error}`}
-                  >
-                    {error}
-                  </p>
-                );
-              })
-            : ''}
-        </InputContainer>
-        <InputContainer>
-          <label
-            className='mb-2'
-            htmlFor='password'
-          >
-            Your password
-          </label>
-          <SingleLineInput
-            id='password'
-            name='password'
-            type='password'
-          ></SingleLineInput>
-          {inputErrors?.password
-            ? inputErrors.password._errors.map((error) => {
-                return (
-                  <p
-                    className='bg-red-800 text-white p-3 rounded-md'
-                    key={`error-${error}`}
-                  >
-                    {error}
-                  </p>
-                );
-              })
-            : ''}
-        </InputContainer>
-        <InputContainer>
-          <label
-            className='mb-2'
-            htmlFor='passwordConfirm'
-          >
-            Retype your password
-          </label>
-          <SingleLineInput
-            id='passwordConfirmation'
-            name='passwordConfirmation'
-            type='password'
-          ></SingleLineInput>
-          {inputErrors?.passwordConfirmation
-            ? inputErrors.passwordConfirmation._errors.map((error) => {
-                return (
-                  <p
-                    className='bg-red-800 text-white p-3 rounded-md'
-                    key={`error-${error}`}
-                  >
-                    {error}
-                  </p>
-                );
-              })
-            : ''}
-          {inputErrors?._errors ? (
-            <p
-              className='bg-red-800 text-white p-3 rounded-md'
-              key={`error-${inputErrors._errors[0]}`}
-            >
-              {inputErrors._errors[0]}
-            </p>
-          ) : (
-            ''
-          )}
-        </InputContainer>
-      </div>
+  return;
+  <form
+    onSubmit={(e) => {
+      e.preventDefault();
+      setRegisterError({ error: false, message: null });
+      setInputErrors(undefined);
+      handleFormSubmit(e.currentTarget);
+    }}
+    className='grid gap-3'
+  >
+    <div className='mb-5 grid gap-3'>
+      <SingleLineInput
+        id='username'
+        label='Username'
+        name='username'
+        placeholder='E.g. Lilly142'
+        required
+        errorMessages={inputErrors?.email?._errors}
+      ></SingleLineInput>
+      <SingleLineInput
+        id='email'
+        label='Your Email'
+        type='email'
+        name='email'
+        required
+        errorMessages={inputErrors?.email?._errors}
+      ></SingleLineInput>
+      <SingleLineInput
+        id='password'
+        label='Your new password'
+        name='password'
+        type='password'
+        errorMessages={inputErrors?.password?._errors}
+      ></SingleLineInput>
+      <SingleLineInput
+        id='passwordConfirmation'
+        label='Confirm your password'
+        name='passwordConfirmation'
+        type='password'
+        errorMessages={inputErrors?.passwordConfirmation?._errors}
+      ></SingleLineInput>
+    </div>
 
-      <PrimaryButton type='submit'>{"Let's Go"}</PrimaryButton>
-    </form>
-  );
+    <PrimaryButton type='submit'>{"Let's Go"}</PrimaryButton>
+  </form>;
 }
