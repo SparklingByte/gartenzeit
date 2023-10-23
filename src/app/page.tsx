@@ -3,10 +3,11 @@
 import { signIn, signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import Image from 'next/image';
+import user from './data/user.json';
 
 export default function Home() {
   const { data: session, status } = useSession();
-  const username = session?.user?.email;
+  const username = session?.user?.email || user.username;
 
   return (
     <main className='p-5'>
@@ -15,9 +16,9 @@ export default function Home() {
           <h1 className='text-2xl font-bold'>Welcome</h1>
           <h2 className='text-xl'>{username || 'Unknown User'}</h2>
         </div>
-        <Link href={'/profile'}>
+        <Link href={'/my-profile'}>
           <Image
-            src='/tempProfilePicture.jpg'
+            src={user.image}
             width={80}
             height={80}
             alt='User Profile Picture'
