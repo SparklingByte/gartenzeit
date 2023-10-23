@@ -75,25 +75,14 @@ export default function LoginForm() {
           })
         : ''}
       <InputContainer>
-        <label htmlFor='email'>Your Email</label>
         <SingleLineInput
           id='email'
           type='email'
           name='email'
           placeholder='Your Email'
+          label='Ya Email'
+          errorMessages={inputErrors?.email ? inputErrors.email._errors : []}
         ></SingleLineInput>
-        {inputErrors?.email
-          ? inputErrors.email._errors.map((inputError) => {
-              return (
-                <p
-                  className='bg-red-800 text-white p-3 rounded-md'
-                  key={`error-${inputError}`}
-                >
-                  {inputError}
-                </p>
-              );
-            })
-          : ''}
       </InputContainer>
       <InputContainer>
         <label htmlFor='password'>Your Password</label>
