@@ -2,7 +2,7 @@ import type {Meta, StoryObj} from '@storybook/react';
 import Heading from './Heading';
 
 const meta = {
-  title: 'Components/Text/Heading',
+  title: 'Components/Typography/Heading',
   component: Heading,
 } satisfies Meta<typeof Heading>
 
