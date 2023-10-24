@@ -10,10 +10,10 @@ export default meta;
 
 type Story = StoryObj<typeof meta>
 
-export const PageHeading: Story = {
+export const HugeHeading: Story = {
   args: {
-    size: 'page',
-    content: 'Page heading',
+    size: 'huge',
+    content: 'Huge heading',
   }
 }
 
