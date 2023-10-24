@@ -3,6 +3,6 @@ interface ParagraphProps {
   color: string;
 }
 
-export default function Paragraph({ color, children }: ParagraphProps) {
-  return <p className={`text-base ${color}`}>{children}</p>;
+export default function Paragraph({ children }: ParagraphProps) {
+  return <p className={`text-base`}>{children}</p>;
 }
