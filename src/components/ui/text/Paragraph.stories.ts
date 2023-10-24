@@ -1,4 +1,4 @@
-import {storiesOf, type Meta, type StoryObj} from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 import Paragraph from './Paragraph';
 
 const meta: Meta<typeof Paragraph> = {
@@ -9,13 +9,8 @@ const meta: Meta<typeof Paragraph> = {
 export default meta;
 type Story = StoryObj<typeof Paragraph>;
 
-/*
- *👇 Render functions are a framework specific feature to allow you control on how the component renders.
- * See https://storybook.js.org/docs/react/api/csf
- * to learn how to use render functions.
- */
-export const Primary: Story = {
+export const Default: Story = {
   args: {
-    children: 'Paragraph',
+    content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.',
   }
-};
+}

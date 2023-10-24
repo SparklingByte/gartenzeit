@@ -1,8 +1,7 @@
 interface ParagraphProps {
-  children: React.ReactNode;
-  color: string;
+  content: string;
 }
 
-export default function Paragraph({ children }: ParagraphProps) {
-  return <p className={`text-base`}>{children}</p>;
+export default function Paragraph({ content }: ParagraphProps) {
+  return <p className={`text-base`}>{content}</p>;
 }
