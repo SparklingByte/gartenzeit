@@ -2,7 +2,7 @@ import type {Meta, StoryObj} from '@storybook/react';
 import AlertBox from './AlertBox';
 
 const meta = {
-  title: 'Components/Input/InputAlert',
+  title: 'Components/Display/AlertBox',
   component: AlertBox,
 } satisfies Meta<typeof AlertBox>
 
