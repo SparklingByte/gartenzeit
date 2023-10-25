@@ -1,5 +1,5 @@
 import { InputHTMLAttributes } from 'react';
-import AlertBox from './AlertBox';
+import AlertBox from '../../ui/display/AlertBox';
 
 type MultiLineInputProps = {
   label: string;
