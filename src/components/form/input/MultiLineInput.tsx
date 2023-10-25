@@ -1,22 +1,25 @@
 import { InputHTMLAttributes } from 'react';
-import InputAlert from './InputAlert';
+import AlertBox from './AlertBox';
 
 type MultiLineInputProps = {
   label: string;
-  errorMessages: string[];
+  errorMessage: string;
 } & InputHTMLAttributes<HTMLTextAreaElement>;
 
 export default function MultiLineInput({
   label,
-  errorMessages,
+  errorMessage,
   ...props
 }: MultiLineInputProps) {
   return (
     <div>
       <label>{label}</label>
       <textarea {...props} />
-      {errorMessages && (
-        <InputAlert errorMessages={errorMessages}></InputAlert>
+      {errorMessage && (
+        <AlertBox
+          message={errorMessage}
+          status='error'
+        ></AlertBox>
       )}
     </div>
   );

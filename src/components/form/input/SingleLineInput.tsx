@@ -1,5 +1,5 @@
 import { InputHTMLAttributes } from 'react';
-import InputAlert from './InputAlert';
+import AlertBox from './AlertBox';
 
 type SingleLineInputProps = {
   label: string;
@@ -44,7 +44,12 @@ export default function SingleLineInput({
         disabled={disabled}
         {...props}
       ></input>
-      {errorMessage && <InputAlert errorMessages={[errorMessage]}></InputAlert>}
+      {errorMessage && (
+        <AlertBox
+          message={errorMessage}
+          status='error'
+        ></AlertBox>
+      )}
     </div>
   );
 }
