@@ -1,10 +1,10 @@
 import type {Meta, StoryObj} from '@storybook/react';
-import InputAlert from './InputAlert';
+import AlertBox from './AlertBox';
 
 const meta = {
   title: 'Components/Input/InputAlert',
-  component: InputAlert,
-} satisfies Meta<typeof InputAlert>
+  component: AlertBox,
+} satisfies Meta<typeof AlertBox>
 
 export default meta;
 
@@ -12,11 +12,7 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
-    alerts: [
-      {
-        message: 'Test test',
-        status: 'success',
-      }
-    ]
+    message: 'Successfully created account',
+    status: 'success',
   }
 }
