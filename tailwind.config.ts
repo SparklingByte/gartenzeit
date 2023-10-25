@@ -20,6 +20,21 @@ const config: Config = {
           100: '#9AC88A',
           80: '#AED3A1',
           50: '#CCE3C4',
+        },
+        background: {
+          100: '#E7DCD0',
+          80: '#F5ECE3',
+          50: '#FBF8F5',
+        },
+        text: {
+          100: '#312B28',
+          80: '#4C4643',
+          50: '#7B6F6A',
+        },
+        semantic: {
+          warning: '#FF5F3C',
+          success: '#66D36A',
+          disabled: '#ECECEC',
         }
       },
       fontFamily: {
