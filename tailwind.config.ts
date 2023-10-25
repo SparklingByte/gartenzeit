@@ -21,6 +21,12 @@ const config: Config = {
           80: '#AED3A1',
           50: '#CCE3C4',
         }
+      },
+      fontFamily: {
+        sans: [
+          'Outfit', 'sans-serif'
+        ],
+        accent: ['Rammetto One', 'serif']
       }
     },
   },
