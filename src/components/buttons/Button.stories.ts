@@ -23,6 +23,7 @@ export const DarkButtonWithoutIcon: Story = {
     text: 'Dark Button',
     color: 'dark',
     showIcon: false,
+    disabled: false,
   }
 }
 
@@ -31,6 +32,14 @@ export const LightButton: Story = {
     text: 'Light Button',
     color: 'light',
     showIcon: false,
+  }
+}
+
+export const DisabledButton: Story = {
+  args: {
+    text: 'Disabled Button',
+    showIcon: true,
+    disabled: true,
   }
 }
 
