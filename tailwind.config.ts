@@ -27,6 +27,14 @@ const config: Config = {
           'Outfit', 'sans-serif'
         ],
         accent: ['Rammetto One', 'serif']
+      },
+      fontSize: {
+        'small-heading': '1.25rem',
+        'medium-subheading': '1.5rem',
+        'medium-heading': '1.8rem',
+        'big-subheading': '2rem',
+        'big-heading': '2.3rem',
+        'huge-heading': '4rem',
       }
     },
   },
