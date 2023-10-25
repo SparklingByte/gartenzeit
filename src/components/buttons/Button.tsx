@@ -1,4 +1,4 @@
-import Paragraph from '../ui/typography/Paragraph';
+import { IoArrowForward } from 'react-icons/io5';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   text: string;
@@ -14,15 +14,15 @@ export default function Button({
 }: ButtonProps) {
   return (
     <button
-      className={`flex gap-3 p-3 rounded-md ${
+      className={`flex items-center gap-3 p-3 rounded-md ${
         color === 'light'
           ? 'bg-primary-100 text-black'
           : 'bg-primary-120 text-white'
       }`}
       {...props}
     >
-      <Paragraph content={text} />
-      {showIcon && <p>{'>'}</p>}
+      <p className='text-small-heading font-bold'>{text}</p>
+      {showIcon && <IoArrowForward />}
     </button>
   );
 }
