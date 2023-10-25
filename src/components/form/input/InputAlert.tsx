@@ -1,18 +1,55 @@
-type InputAlertProps = {
-  errorMessages: string[];
+import { FaCheck } from 'react-icons/fa';
+import { TbInfoSquareRounded } from 'react-icons/tb';
+import { PiWarningBold } from 'react-icons/pi';
+import { VscError } from 'react-icons/vsc';
+
+type messageType = {
+  status: 'success' | 'info' | 'warning' | 'error';
+  message: string;
 };
 
-export default function InputAlert({ errorMessages }: InputAlertProps) {
-  // Return if there is no error message
-  if (errorMessages.length === 0) {
-    return;
-  }
+type InputAlertProps = {
+  alerts: messageType[];
+};
+
+export default function InputAlert({ alerts }: InputAlertProps) {
+  const styleMap = {
+    success: {
+      style: 'bg-semantic-success text-background-50',
+      icon: <FaCheck />,
+    },
+    info: {
+      style: 'bg-blue-400 text-background-50',
+      icon: <TbInfoSquareRounded />,
+    },
+    warning: {
+      style: 'bg-yellow-400 text-text-100',
+      icon: <PiWarningBold />,
+    },
+    error: {
+      style: 'bg-semantic-warning text-background-50',
+      icon: <VscError />,
+    },
+  };
 
   return (
-    <div className='grid gap-1 bg-red-500 text-white p-3 rounded-md'>
-      {errorMessages.map((message) => (
-        <p key={`error-${message}`}>{message}</p>
-      ))}
+    <div className='grid gap-3'>
+      {alerts.map((alert) => {
+        return (
+          <div
+            key={alert.message}
+            className={
+              'flex items-center gap-3 p-3 rounded-xl ' +
+              styleMap[alert.status].style
+            }
+          >
+            <span className='text-small-heading'>
+              {styleMap[alert.status].icon}
+            </span>
+            <p>{alert.message}</p>
+          </div>
+        );
+      })}
     </div>
   );
 }
