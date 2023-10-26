@@ -13,6 +13,7 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   args: {
     label: 'Default input field',
-    color: 'base'
+    color: 'base',
+    errorMessage: 'Invalid input',
   }
 }

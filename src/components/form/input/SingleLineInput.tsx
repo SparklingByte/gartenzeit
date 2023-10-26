@@ -1,5 +1,4 @@
 import { InputHTMLAttributes } from 'react';
-import AlertBox from '../../ui/display/AlertBox';
 
 type SingleLineInputProps = {
   label: string;
@@ -32,24 +31,28 @@ export default function SingleLineInput({
   }
 
   return (
-    <div className='grid gap-3'>
+    <div className='grid gap-1'>
       <label
-        className='text-small-heading font-bold'
+        className={`text-small-heading font-bold ${
+          disabled ? 'text-text-50' : 'text-text-100'
+        }`}
         htmlFor={props.id}
       >
         {label} {required && '(Required)'}
       </label>
+      {errorMessage && !disabled && (
+        <span
+          key={errorMessage}
+          className='text-semantic-warning font-bold'
+        >
+          {errorMessage}
+        </span>
+      )}
       <input
-        className={`p-3 rounded-md ${inputStyling}`}
+        className={`p-3 rounded-xl ${inputStyling}`}
         disabled={disabled}
         {...props}
       ></input>
-      {errorMessage && (
-        <AlertBox
-          message={errorMessage}
-          status='error'
-        ></AlertBox>
-      )}
     </div>
   );
 }
