@@ -1,15 +1,18 @@
-import { InputHTMLAttributes } from 'react';
+import { InputHTMLAttributes, TextareaHTMLAttributes } from 'react';
 
 type SingleLineInputProps = {
   label: string;
+  multiline: boolean;
   color: 'base' | 'error' | 'success';
   errorMessage?: string;
   disabled?: boolean;
   required?: boolean;
-} & InputHTMLAttributes<HTMLInputElement>;
+} & InputHTMLAttributes<HTMLInputElement> &
+  TextareaHTMLAttributes<HTMLTextAreaElement>;
 
 export default function SingleLineInput({
   label,
+  multiline,
   color,
   errorMessage,
   disabled,
@@ -27,7 +30,7 @@ export default function SingleLineInput({
         : color === 'success'
         ? 'border-solid border-2 border-semantic-success'
         : '';
-    inputStyling += ' bg-background-50 text-text-80';
+    inputStyling += ' bg-background-50 text-text-80 p-3 rounded-xl';
   }
 
   return (
@@ -48,11 +51,18 @@ export default function SingleLineInput({
           {errorMessage}
         </span>
       )}
-      <input
-        className={`p-3 rounded-xl ${inputStyling}`}
-        disabled={disabled}
-        {...props}
-      ></input>
+      {multiline ? (
+        <textarea
+          {...props}
+          className={inputStyling}
+        ></textarea>
+      ) : (
+        <input
+          className={inputStyling}
+          disabled={disabled}
+          {...props}
+        ></input>
+      )}
     </div>
   );
 }
