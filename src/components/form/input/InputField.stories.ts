@@ -1,10 +1,10 @@
 import type {Meta, StoryObj} from '@storybook/react';
-import SingleLineInput from './SingleLineInput';
+import InputField from './InputField';
 
 const meta = {
-  title: 'Components/Input/SingleLineInput',
-  component: SingleLineInput,
-} satisfies Meta<typeof SingleLineInput>
+  title: 'Components/Input/InputField',
+  component: InputField,
+} satisfies Meta<typeof InputField>
 
 export default meta;
 
