@@ -2,7 +2,7 @@ import { InputHTMLAttributes, TextareaHTMLAttributes } from 'react';
 
 type SingleLineInputProps = {
   label: string;
-  multiline: boolean;
+  multiline?: boolean;
   color: 'base' | 'error' | 'success';
   errorMessage?: string;
   disabled?: boolean;
