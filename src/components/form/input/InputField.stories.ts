@@ -10,10 +10,20 @@ export default meta;
 
 type Story = StoryObj<typeof meta>
 
-export const Default: Story = {
+export const SingleLineInput: Story = {
   args: {
-    label: 'Default input field',
+    label: 'Default single line input field',
     color: 'base',
-    errorMessage: 'Invalid input',
+    errorMessage: 'Example Error Message',
+    multiline: false,
+  }
+}
+
+export const MultiLineInput: Story = {
+  args: {
+    label: 'Multi line input field',
+    color: 'base',
+    errorMessage: 'Example Error Message',
+    multiline: true,
   }
 }
