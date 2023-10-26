@@ -45,7 +45,7 @@ export default function InputAlert({
       >
         {styleMap[status].icon}
         <div>
-          <p className='text-small-heading'>{title}</p>
+          <p className='text-small-heading font-accent'>{title}</p>
           {message && <p>{message}</p>}
         </div>
       </div>
