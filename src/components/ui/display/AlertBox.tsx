@@ -5,26 +5,33 @@ import { VscError } from 'react-icons/vsc';
 
 type InputAlertProps = {
   status: 'success' | 'info' | 'warning' | 'error';
-  message: string;
+  title: string;
+  message?: string;
 };
 
-export default function InputAlert({ status, message }: InputAlertProps) {
+export default function InputAlert({
+  status,
+  title,
+  message,
+}: InputAlertProps) {
   const styleMap = {
     success: {
-      style: 'bg-semantic-success text-background-50',
-      icon: <FaCheck />,
+      style: 'bg-semantic-success text-text-100',
+      icon: <FaCheck className='text-medium-heading text-text-100' />,
     },
     info: {
-      style: 'bg-blue-400 text-background-50',
-      icon: <TbInfoSquareRounded />,
+      style: 'bg-blue-400 text-text-100',
+      icon: (
+        <TbInfoSquareRounded className='text-medium-heading text-text-100' />
+      ),
     },
     warning: {
       style: 'bg-yellow-400 text-text-100',
-      icon: <PiWarningBold />,
+      icon: <PiWarningBold className='text-medium-heading text-text-100' />,
     },
     error: {
       style: 'bg-semantic-warning text-background-50',
-      icon: <VscError />,
+      icon: <VscError className='text-medium-heading text-background-50' />,
     },
   };
 
@@ -36,8 +43,11 @@ export default function InputAlert({ status, message }: InputAlertProps) {
           'flex items-center gap-3 p-3 rounded-xl ' + styleMap[status].style
         }
       >
-        <span className='text-small-heading'>{styleMap[status].icon}</span>
-        <p>{message}</p>
+        {styleMap[status].icon}
+        <div>
+          <p className='text-small-heading'>{title}</p>
+          {message && <p>{message}</p>}
+        </div>
       </div>
     </div>
   );
