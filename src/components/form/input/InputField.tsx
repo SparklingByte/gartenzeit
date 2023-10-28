@@ -30,7 +30,7 @@ export default function SingleLineInput({
         : color === 'success'
         ? 'border-solid border-2 border-semantic-success'
         : '';
-    inputStyling += ' bg-background-50 text-text-80 p-3 rounded-xl';
+    inputStyling += ' bg-background-50 text-text-80';
   }
 
   return (
@@ -54,11 +54,12 @@ export default function SingleLineInput({
       {multiline ? (
         <textarea
           {...props}
-          className={inputStyling}
+          disabled={disabled}
+          className={inputStyling + 'p-3 rounded-xl'}
         ></textarea>
       ) : (
         <input
-          className={inputStyling}
+          className={inputStyling + ' p-3 rounded-xl'}
           disabled={disabled}
           {...props}
         ></input>
