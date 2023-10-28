@@ -1,4 +1,4 @@
-type IndicatorColor = 'red' | 'green';
+export type IndicatorColor = 'red' | 'green';
 
 type StatusIndicatorProps = {
   color: IndicatorColor;
