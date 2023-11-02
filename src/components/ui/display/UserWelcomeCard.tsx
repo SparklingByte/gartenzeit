@@ -8,7 +8,7 @@ type UserWelcomeCardProps = {
   onProfilePicClick: () => undefined;
 };
 
-const IMAGE_SIZE = 55;
+const IMAGE_SIZE = 80;
 
 export default function UserWelcomeCard({
   username,
