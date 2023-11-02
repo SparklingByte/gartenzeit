@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import NextAuthProvider from './context/NextAuthProvider';
 import Link from 'next/link';
 import './globals.css';
+import LogoBar from '@/components/ui/display/LogoBar';
 
 export const metadata: Metadata = {
   title: 'Gartenzeit',
@@ -15,16 +16,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang='en'>
-      <body className='bg-rose-50'>
-        <header className='bg-green-300 text-center p-3'>
-          <Link
-            href='/'
-            className='text-xl font-bold'
-          >
-            Gartenzeit
-          </Link>
-        </header>
+      <body className='bg-background-80'>
         <NextAuthProvider>{children}</NextAuthProvider>
+        <LogoBar />
       </body>
     </html>
   );
