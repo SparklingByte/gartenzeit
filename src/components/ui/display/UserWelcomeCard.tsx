@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { Heading, Subheading } from '@/components/typography/Typography';
 
 type UserWelcomeCardProps = {
   username: string;
@@ -17,8 +18,8 @@ export default function UserWelcomeCard({
   return (
     <div className='flex justify-between items-center bg-background-50 text-text-100 rounded-xl p-5'>
       <div>
-        <h1 className='text-2xl font-bold'>Welcome</h1>
-        <h2 className='text-xl'>{username || 'Unknown User'}</h2>
+        <Heading size='big'>Welcome</Heading>
+        <Subheading size='big'>{username || 'Unkown User'}</Subheading>
       </div>
       <Image
         src={userProfilePicture || ''} // TODO Add fallback profile picture
