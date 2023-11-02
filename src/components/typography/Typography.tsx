@@ -60,7 +60,7 @@ export function Subheading({ children, size, ...props }: SubheadingProps) {
   const sizeMap: { [key in SubheadingSizes]: React.ReactNode } = {
     big: (
       <h3
-        className='text-big-subheading font-bold'
+        className='text-big-subheading'
         {...props}
       >
         {children}
@@ -68,7 +68,7 @@ export function Subheading({ children, size, ...props }: SubheadingProps) {
     ),
     medium: (
       <h5
-        className='text-medium-subheading font-bold'
+        className='text-medium-subheading'
         {...props}
       >
         {children}
