@@ -1,6 +1,5 @@
-import Link from 'next/link';
 import Image from 'next/image';
-import { Heading, Subheading } from '@/components/typography/Typography';
+import { Heading, Subheading } from '../../typography/Typography';
 
 type UserWelcomeCardProps = {
   username: string;
