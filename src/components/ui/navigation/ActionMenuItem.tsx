@@ -11,7 +11,7 @@ type ActionMenuItemProps = {
   text: string;
   icon?: MenuIcon;
   iconPosition?: 'left' | 'right';
-  onOpen: () => undefined;
+  onOpen: () => void;
 };
 
 export default function ActionMenuItem({
