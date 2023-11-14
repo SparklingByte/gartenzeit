@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import AuthenticationAlert from '@/components/AuthenticationAlert';
-import SingleLineInput from '@/components/form/input/SingleLineInput';
+import InputField from '@/components/form/input/InputField';
 
 const userLoginDataSchema = z.object({
   email: z.string().email('Please provide a valid email like hello@mail.com'),
@@ -73,24 +73,6 @@ export default function LoginForm() {
             message: 'Invalid credentials',
           })
         : ''}
-      <SingleLineInput
-        id='email'
-        type='email'
-        name='email'
-        placeholder='Your Email'
-        label='Ya Email'
-        errorMessages={inputErrors?.email ? inputErrors.email._errors : []}
-      ></SingleLineInput>
-      <label htmlFor='password'>Your Password</label>
-      <SingleLineInput
-        id='password'
-        label='Your Password'
-        type='password'
-        name='password'
-        errorMessages={
-          inputErrors?.password ? inputErrors.password._errors : undefined
-        }
-      ></SingleLineInput>
 
       <button
         className='bg-green-900 p-2 text-white rounded-md'
