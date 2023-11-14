@@ -17,8 +17,8 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className='bg-background-80'>
-        <NextAuthProvider>{children}</NextAuthProvider>
         <LogoBar />
+        <NextAuthProvider>{children}</NextAuthProvider>
       </body>
     </html>
   );
