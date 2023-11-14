@@ -1,4 +1,6 @@
 {
   "image": "/tempProfilePicture.jpg",
-  "username": "Sebastien"
+  "username": "Sebastien",
+  "location": "Leipzig",
+  "about": "I'm passionate about gardening and meeting new friends that share the interest in vegetables."
 }
