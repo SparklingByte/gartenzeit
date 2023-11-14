@@ -1,3 +1,5 @@
+'use client';
+
 import { ReactNode } from 'react';
 import { FaArrowLeftLong } from 'react-icons/fa6';
 import { TbSettingsFilled } from 'react-icons/tb';
@@ -9,14 +11,14 @@ type ActionMenuItemProps = {
   text: string;
   icon?: MenuIcon;
   iconPosition?: 'left' | 'right';
-  onClick: () => undefined;
+  onOpen: () => undefined;
 };
 
 export default function ActionMenuItem({
   text,
   icon,
   iconPosition,
-  onClick,
+  onOpen,
 }: ActionMenuItemProps) {
   const iconMap: { [key in MenuIcon]: ReactNode } = {
     back: <FaArrowLeftLong />,
@@ -31,7 +33,7 @@ export default function ActionMenuItem({
 
   return (
     <div
-      onClick={onClick}
+      onClick={onOpen}
       className='flex gap-2 items-center cursor-pointer'
     >
       {iconPosition === 'right'
