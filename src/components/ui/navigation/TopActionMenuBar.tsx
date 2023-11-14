@@ -1,18 +1,19 @@
+'use client';
+
 import ActionMenuItem from './ActionMenuItem';
+import { useRouter } from 'next/navigation';
 
 type TopActionMenuBarProps = {
   hasBackItem?: boolean;
-  backOnClick: () => undefined;
   hasSettingsItem?: boolean;
-  settingsOnClick: () => undefined;
 };
 
 export default function TopActionMenuBar({
   hasBackItem,
-  backOnClick,
   hasSettingsItem,
-  settingsOnClick,
 }: TopActionMenuBarProps) {
+  const router = useRouter();
+
   return (
     <div className='flex justify-between w-100 items-center'>
       {hasBackItem && (
@@ -20,7 +21,7 @@ export default function TopActionMenuBar({
           text='Back'
           icon='back'
           iconPosition='left'
-          onOpen={backOnClick}
+          onOpen={router.back}
         />
       )}
       {hasSettingsItem && (
@@ -28,9 +29,7 @@ export default function TopActionMenuBar({
           text='Settings'
           icon='settings'
           iconPosition='right'
-          onOpen={() => {
-            settingsOnClick;
-          }}
+          onOpen={() => router.push('/settings')}
         />
       )}
     </div>
