@@ -2,7 +2,7 @@ type SectionTitleProps = {
   title: string;
   helperText?: string;
   linkText?: string;
-  onOpen?: () => {};
+  onOpen?: () => void;
 };
 
 export default function SectionTitle({
