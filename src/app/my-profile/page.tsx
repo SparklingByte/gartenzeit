@@ -25,13 +25,14 @@ export default function MyProfilePage() {
           <TextCard
             title='About me'
             text={user.about}
-          ></TextCard>
-          <div className='grid'>
-            <Button
-              text='Edit info'
-              showIcon={false}
-            />
-          </div>
+          >
+            <div className='mt-8'>
+              <Button
+                text='Edit info'
+                showIcon={false}
+              />
+            </div>
+          </TextCard>
         </div>
       </div>
     </main>
