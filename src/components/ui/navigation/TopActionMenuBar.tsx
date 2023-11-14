@@ -1,4 +1,3 @@
-import { ReactNode } from 'react';
 import ActionMenuItem from './ActionMenuItem';
 
 type TopActionMenuBarProps = {
@@ -21,7 +20,7 @@ export default function TopActionMenuBar({
           text='Back'
           icon='back'
           iconPosition='left'
-          onClick={backOnClick}
+          onOpen={backOnClick}
         />
       )}
       {hasSettingsItem && (
@@ -29,7 +28,7 @@ export default function TopActionMenuBar({
           text='Settings'
           icon='settings'
           iconPosition='right'
-          onClick={() => {
+          onOpen={() => {
             settingsOnClick;
           }}
         />
