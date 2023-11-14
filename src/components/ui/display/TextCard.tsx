@@ -5,7 +5,7 @@ interface TextCardProps {
 
 export default function TextCard({ title, text }: TextCardProps) {
   return (
-    <article className='p-5 bg-background-80 rounded-xl'>
+    <article className='p-5 bg-background-100 rounded-xl'>
       <h4 className='mb-3 text-text-100 text-small-heading font-bold'>
         {title}
       </h4>
