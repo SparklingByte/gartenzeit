@@ -1,3 +1,5 @@
+'use client';
+
 import HarvestCard from './HarvestCard';
 import SectionTitle from '../display/SectionTitle';
 import CalloutBox from '../display/CalloutBox';
