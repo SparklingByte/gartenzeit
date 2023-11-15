@@ -54,7 +54,7 @@ export default function LoginForm() {
       signIn("credentials", {
         email: validatedUserInput.email,
         password: validatedUserInput.password,
-        callbackUrl: callbackUrlParam || '/',
+        callbackUrl: callbackUrlParam || "/",
         redirect: true,
       });
     }
@@ -79,8 +79,21 @@ export default function LoginForm() {
           message="Please check your email and password and try again."
         ></AlertBox>
       )}
-      <InputField name='email' id="email" label="Your Email" color="base" errorMessage={inputErrors?.email?._errors[0]}></InputField>
-      <InputField name='password' id="password" type='password' label="Your Password" errorMessage={inputErrors?.password?._errors[0]} color="base"></InputField>
+      <InputField
+        name="email"
+        id="email"
+        label="Your Email"
+        color="base"
+        errorMessage={inputErrors?.email?._errors[0]}
+      ></InputField>
+      <InputField
+        name="password"
+        id="password"
+        type="password"
+        label="Your Password"
+        errorMessage={inputErrors?.password?._errors[0]}
+        color="base"
+      ></InputField>
       <div className="grid mt-3 w-full">
         <Button showIcon text="Login"></Button>
       </div>
