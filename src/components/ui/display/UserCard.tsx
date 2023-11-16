@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { Heading, Paragraph } from '../../typography/Typography';
 import { FaLocationDot } from 'react-icons/fa6';
 
@@ -16,14 +17,16 @@ export default function UserCard({
   locationName,
 }: UserCardProps) {
   return (
-    <div className='flex gap-3 p-5 bg-background-50 rounded-xl'>
-      <Image
-        alt={`Profile picture of ${username}`}
-        width={PROFILE_PICTURE_SIZE}
-        height={PROFILE_PICTURE_SIZE}
-        src={userProfilePicture}
-        className='bg-text-100 rounded-md'
-      />
+    <div className='flex items-center gap-3 p-5 bg-background-50 rounded-xl'>
+      <Link href={'/user/' + username}>
+        <Image
+          alt={`Profile picture of ${username}`}
+          width={PROFILE_PICTURE_SIZE}
+          height={PROFILE_PICTURE_SIZE}
+          src={userProfilePicture}
+          className='bg-text-100 rounded-md'
+        />
+      </Link>
       <div>
         <Heading size='small'>{username}</Heading>
         <div className='flex gap-1 items-center'>

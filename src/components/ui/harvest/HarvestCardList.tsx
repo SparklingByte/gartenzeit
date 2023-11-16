@@ -4,24 +4,25 @@ import HarvestCard from './HarvestCard';
 import SectionTitle from '../display/SectionTitle';
 import CalloutBox from '../display/CalloutBox';
 import Button from '../../buttons/Button';
+import Link from 'next/link';
 
 type HarvestCardListProps = {
   title: string;
-  onShowAll?: () => void;
+  showAllPathname?: string;
   noEntriesTitle: string;
   noEntriesDescription: string;
   noEntriesButtonText: string;
-  noEntriesButtonAction: () => void;
+  calloutButtonPathname: string;
   harvestPosts: React.ComponentProps<typeof HarvestCard>[];
 };
 
 export default function HarvestCardList({
   title,
-  onShowAll,
+  showAllPathname,
   noEntriesTitle,
   noEntriesDescription,
   noEntriesButtonText,
-  noEntriesButtonAction,
+  calloutButtonPathname,
   harvestPosts,
 }: HarvestCardListProps) {
   return (
@@ -29,7 +30,7 @@ export default function HarvestCardList({
       <SectionTitle
         title={title}
         linkText={harvestPosts.length > 0 ? 'Show all' : undefined}
-        onOpen={onShowAll}
+        linkPathname={showAllPathname}
       />
       {harvestPosts.length > 0 ? (
         harvestPosts.map((post) => {
@@ -46,15 +47,10 @@ export default function HarvestCardList({
           );
         })
       ) : (
-        <CalloutBox
-          title={noEntriesTitle}
-          description={noEntriesDescription}
-        >
-          <Button
-            showIcon={false}
-            text={noEntriesButtonText}
-            onClick={noEntriesButtonAction}
-          />
+        <CalloutBox title={noEntriesTitle} description={noEntriesDescription}>
+          <Link href={calloutButtonPathname}>
+            <Button showIcon={false} text={noEntriesButtonText} />
+          </Link>
         </CalloutBox>
       )}
     </div>

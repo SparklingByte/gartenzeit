@@ -14,7 +14,6 @@ export const TwoItems: Story = {
   args: {
     hasBackItem: true,
     hasSettingsItem: true,
-    backOnClick: () => {},
-    settingsOnClick: () => {},
+    settingsPathname: '/settings',
   },
 };
