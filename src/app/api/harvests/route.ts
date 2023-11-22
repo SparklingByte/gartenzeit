@@ -1,9 +1,8 @@
 import { prisma } from '@/lib/prismaClient';
 import { NextRequest, NextResponse } from 'next/server';
 import { Harvest } from '@prisma/client';
-import { z } from 'zod';
 import { randomUUID } from 'crypto';
-import { HarvestCreateInputObjectSchema } from '../../../../prisma/generated/schemas';
+import { HarvestSchema } from '@/lib/schemas';
 
 export async function GET() {
   const harvests = await prisma.harvest.findMany();
@@ -12,20 +11,56 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   // Get data for new harvest from front end
-  const harvestData: Harvest = await req.json();
+  let harvestData: Harvest;
 
-  harvestData.id = randomUUID();
-
-  const parsedData = HarvestCreateInputObjectSchema.safeParse(harvestData);
-  if (!parsedData.success) {
-    console.log(parsedData.error.format());
+  try {
+    harvestData = await req.json();
+  } catch {
+    return NextResponse.json(
+      { message: 'Invalid JSON provided to API' },
+      { status: 400 }
+    );
   }
 
-  //   prisma.harvest.create({
-  //     data: {
-  //       ...harvestData,
-  //     },
-  //   });
+  // Validate incoming request data
+  try {
+    HarvestSchema.parse(harvestData);
+  } catch {
+    return NextResponse.json(
+      { message: 'Invalid provided data to API' },
+      { status: 400 }
+    );
+  }
 
-  return NextResponse.json({ message: 'Moin' }, { status: 301 });
+  // Check if harvest ID already exists to replace
+  // with new random UUID in case
+  const existingHarvestWithId = await prisma.harvest.findUnique({
+    where: {
+      id: harvestData.id,
+    },
+  });
+
+  if (existingHarvestWithId) {
+    harvestData.id = randomUUID();
+  }
+
+  // Store harvest into database
+  try {
+    await prisma.harvest.create({
+      data: {
+        ...harvestData,
+      },
+    });
+  } catch {
+    return NextResponse.json(
+      { message: 'Error while writing data to database' },
+      { status: 400 }
+    );
+  }
+
+  // If created successfully, send response to client
+  return NextResponse.json(
+    { message: 'The harvest was created' },
+    { status: 201 }
+  );
 }
