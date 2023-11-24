@@ -1,12 +1,15 @@
 import { prisma } from '@/lib/prismaClient';
-import { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
 import { nextAuthConfig } from '../../auth/[...nextauth]/route';
 import { z } from 'zod';
 import { HarvestSchema } from '@/lib/schemas';
 
-export async function GET({ params }: { params: { harvestId: string } }) {
+//* Responding with data of harvest
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { harvestId: string } }
+) {
   const harvestData = await prisma.harvest.findUnique({
     where: {
       id: params.harvestId,
@@ -19,36 +22,81 @@ export async function GET({ params }: { params: { harvestId: string } }) {
   return NextResponse.json(harvestData);
 }
 
+//* Editing the information of a harvest
 export async function PUT(
-  req: NextApiRequest,
-  res: NextApiResponse,
+  req: NextRequest,
   { params }: { params: { harvestId: string } }
 ) {
-  const session = await getServerSession(req, res, nextAuthConfig);
+  const session = await getServerSession(nextAuthConfig);
 
-    // const updatedHarvest: z.infer<typeof HarvestSchema> = req.body.
+  // Store sent data by client into variable to later update in database
+  const updatedHarvest: z.infer<typeof HarvestSchema> = await req.json();
 
-  if (!session || !session.user?.email) {
-    res.json({ message: 'You have to log in.' });
-    res.status(401);
-    return;
+  // Check if provided data is valid
+  try {
+    HarvestSchema.parse(updatedHarvest);
+  } catch {
+    return NextResponse.json(
+      { message: 'Invalid data provided' },
+      { status: 400 }
+    );
   }
 
+  if (!session || !session.user?.email) {
+    return NextResponse.json(
+      { message: 'You have to be logged in to use this API' },
+      { status: 403 }
+    );
+  }
+
+  let harvest;
+
   try {
-    const harvest = await prisma.harvest.findUnique({
+    harvest = await prisma.harvest.findUnique({
       where: {
         id: params.harvestId,
       },
     });
   } catch {
-    res.json({ message: 'Error while getting harvest from database' });
-    res.status(401);
-    return;
+    return NextResponse.json(
+      {
+        message: 'Error while getting harvest from database',
+      },
+      { status: 401 }
+    );
   }
 
+  // Change id of harvest back to original one in case it was changed (not desired)
+  if (updatedHarvest.id !== params.harvestId) {
+    updatedHarvest.id = params.harvestId;
+  }
+
+  // Get logged in user to check if the user is the owner
   const loggedInUser = await prisma.user.findUnique({
     where: {
       email: session.user?.email,
     },
   });
+
+  if (loggedInUser?.id !== harvest?.hostUserId) {
+    return NextResponse.json(
+      { message: 'You are not permitted to edit this harvest' },
+      { status: 403 }
+    );
+  }
+
+  // Update data of harvest in database
+  await prisma.harvest.update({
+    where: {
+      id: params.harvestId,
+    },
+    data: {
+      ...updatedHarvest,
+    },
+  });
+
+  return NextResponse.json(
+    { message: 'The harvest was successfully edited' },
+    { status: 204 }
+  );
 }
