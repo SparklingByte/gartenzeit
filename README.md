@@ -2,6 +2,8 @@
 
 ## Next Things To Do
 
+- API to delete a harvest
+- require user logged in for creating harvest (API)
 - Fix login and register API / API calls in pages
 
 ## Recently added
