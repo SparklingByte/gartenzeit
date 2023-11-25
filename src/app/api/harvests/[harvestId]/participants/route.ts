@@ -1,7 +1,12 @@
+import { nextAuthConfig } from '@/app/api/auth/[...nextauth]/route';
 import { prisma } from '@/lib/prismaClient';
 import { HarvestIdSchema, HarvestParticipantsSchema } from '@/lib/schemas';
+import { randomUUID } from 'crypto';
+import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
 
+// TODO Will need an API for approving / removing participants
+//* Getting an array of the IDs and participation status of joined participants
 export async function GET(
   req: NextRequest,
   { params }: { params: { harvestId: string } }
@@ -39,4 +44,77 @@ export async function GET(
   }
 
   return NextResponse.json(harvestParticipants, { status: 200 });
+}
+
+//* Adding a user to the list of participants
+export async function POST(
+  req: NextRequest,
+  { params }: { params: { harvestId: string } }
+) {
+  const session = await getServerSession(nextAuthConfig);
+
+  if (!session) {
+    return NextResponse.json(
+      { message: 'You must be logged in' },
+      { status: 401 }
+    );
+  }
+
+  // Validating harvest ID
+  try {
+    HarvestIdSchema.parse(params.harvestId);
+  } catch {
+    return NextResponse.json(
+      { message: 'Invalid harvest ID' },
+      { status: 400 }
+    );
+  }
+
+  // Checking if harvest exists
+  let harvestData;
+  try {
+    harvestData = await prisma.harvest.findUniqueOrThrow({
+      where: {
+        id: params.harvestId,
+      },
+    });
+  } catch {
+    return NextResponse.json(
+      { message: `Harvest with ID ${params.harvestId} not found` },
+      { status: 404 }
+    );
+  }
+
+  try {
+    const { id: userId } = await prisma.user.findUniqueOrThrow({
+      where: {
+        email: session.user?.email || '',
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (userId === harvestData.hostUserId) {
+      throw new Error('You cannot join your own harvest');
+    }
+
+    if (harvestData.dateTime.toDateString() > new Date().toDateString()) {
+      throw new Error('Cannot join a harvest that is already over');
+    }
+
+    // Add participation to database
+    await prisma.userHarvestParticipations.create({
+      data: {
+        id: randomUUID(),
+        harvestId: params.harvestId,
+        userId: userId,
+        status: 'PENDING',
+      },
+    });
+  } catch (err) {
+    return NextResponse.json({ message: `Error → ${err}` }, { status: 500 });
+  }
+
+  return NextResponse.json({ message: 'Participation added' }, { status: 200 });
 }
