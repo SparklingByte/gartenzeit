@@ -1,33 +1,36 @@
 import { prisma } from '@/lib/prismaClient';
 import { NextRequest, NextResponse } from 'next/server';
-import { Harvest } from '@prisma/client';
 import { randomUUID } from 'crypto';
 import { HarvestSchema } from '@/lib/schemas';
+import { getServerSession } from 'next-auth';
+import { nextAuthConfig } from '../auth/[...nextauth]/route';
 
+//* Get all harvests
+// TODO Needs performance optimization as it returns ALL harvests of database
 export async function GET() {
   const harvests = await prisma.harvest.findMany();
   return Response.json(harvests);
 }
 
+//* Creating a new harvest
 export async function POST(req: NextRequest) {
-  // Get data for new harvest from front end
-  let harvestData: Harvest;
+  const session = await getServerSession(nextAuthConfig);
 
-  try {
-    harvestData = await req.json();
-  } catch {
+  if (!session || !session.user?.email) {
     return NextResponse.json(
-      { message: 'Invalid JSON provided to API' },
-      { status: 400 }
+      { message: 'Must be logged in to create a harvest' },
+      { status: 401 }
     );
   }
 
-  // Validate incoming request data
+  const harvestData = await req.json();
+
+  // Validate provided data
   try {
     HarvestSchema.parse(harvestData);
   } catch {
     return NextResponse.json(
-      { message: 'Invalid provided data to API' },
+      { message: 'Invalid data provided to API' },
       { status: 400 }
     );
   }
@@ -60,7 +63,10 @@ export async function POST(req: NextRequest) {
 
   // If created successfully, send response to client
   return NextResponse.json(
-    { message: 'The harvest was created' },
+    {
+      message: 'The harvest was successfully created',
+      harvestId: harvestData.id,
+    },
     { status: 201 }
   );
 }
