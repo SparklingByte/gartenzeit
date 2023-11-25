@@ -38,12 +38,22 @@ export const HarvestParticipantsSchema = z
 
 export const UserRegistrationDataSchema = z
   .object({
-    email: z.string().email('Invalid email provided'),
+    email: z.string().email('Please provide a valid email like me@hello.com'),
     username: z
       .string()
       .min(3, 'The username needs at least 3 characters')
-      .max(10, 'The username can have a maximum of 10 characters.'),
-    location: z.string().min(3, 'The location needs at least 3 characters'),
+      .max(10, 'The username can have a maximum of 10 characters')
+      .regex(
+        new RegExp(/^[a-zA-Z]+[-'s]?[a-zA-Z ]+$/),
+        'The username should contain only alphabets'
+      ),
+    location: z
+      .string()
+      .min(3, 'Please provide an valid location name')
+      .regex(
+        new RegExp(/^[a-zA-Z]+[-'s]?[a-zA-Z ]+$/),
+        'The location name should contain only alphabets'
+      ),
     password: z.string().min(8, 'The passwords needs at least 8 characters'),
     passwordConfirmation: z
       .string()
@@ -53,5 +63,5 @@ export const UserRegistrationDataSchema = z
     (data) => {
       return data.password === data.passwordConfirmation;
     },
-    { message: 'The passwords have to match', path: ['passwordConfirmation'] }
+    { message: 'The passwords do not match', path: ['passwordConfirmation'] }
   );
