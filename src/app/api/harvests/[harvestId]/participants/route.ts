@@ -103,6 +103,22 @@ export async function POST(
       throw new Error('Cannot join a harvest that is already over');
     }
 
+    // Check if user has already joined
+    const existingParticipationId =
+      await prisma.userHarvestParticipations.findFirst({
+        where: {
+          harvestId: params.harvestId,
+          userId: userId,
+        },
+        select: {
+          id: true,
+        },
+      });
+
+    if (existingParticipationId) {
+      throw new Error('You have already joined this harvest');
+    }
+
     // Add participation to database
     await prisma.userHarvestParticipations.create({
       data: {

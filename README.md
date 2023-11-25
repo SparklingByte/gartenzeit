@@ -2,7 +2,6 @@
 
 ## Next Things To Do
 
-- API for joining harvests has to check, if user has already joined
 - Fix login and register API / API calls in pages
 
 ## Recently added
