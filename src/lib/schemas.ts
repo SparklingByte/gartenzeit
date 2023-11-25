@@ -24,3 +24,5 @@ export const HarvestSchema = z.object({
   dateTime: z.string().datetime(),
   hostUserId: z.string().uuid('User ID must be a valid UUID'),
 });
+
+export const HarvestIdSchema = z.string().uuid();
