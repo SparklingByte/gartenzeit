@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
 import { nextAuthConfig } from '../../auth/[...nextauth]/route';
 import { z } from 'zod';
-import { HarvestSchema } from '@/lib/schemas';
+import { HarvestIdSchema, HarvestSchema } from '@/lib/schemas';
 
 //* Responding with data of harvest
 export async function GET(
@@ -97,6 +97,98 @@ export async function PUT(
 
   return NextResponse.json(
     { message: 'The harvest was successfully edited' },
+    { status: 204 }
+  );
+}
+
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: { harvestId: string } }
+) {
+  const session = await getServerSession(nextAuthConfig);
+
+  if (!session || !session.user?.email) {
+    return NextResponse.json(
+      { message: 'Login required to use this API' },
+      { status: 401 }
+    );
+  }
+
+  // Get user data from database
+  const loggedInUser = await prisma.user.findUnique({
+    where: {
+      email: session.user.email,
+    },
+  });
+
+  // Check if provided harvest id is valid
+  try {
+    HarvestIdSchema.parse(params.harvestId);
+  } catch {
+    return NextResponse.json(
+      { message: 'No valid HarvestId provided.' },
+      { status: 400 }
+    );
+  }
+
+  const harvestData = await prisma.harvest.findUnique({
+    where: {
+      id: params.harvestId,
+    },
+    select: {
+      hostUserId: true,
+    },
+  });
+
+  if (!harvestData) {
+    return NextResponse.json(
+      { message: 'The harvest was not found' },
+      { status: 404 }
+    );
+  }
+
+  const { hostUserId } = harvestData;
+
+  // Check if logged in user is host of the harvest
+  if (hostUserId !== loggedInUser?.id) {
+    return NextResponse.json(
+      { message: 'Must be the owner of the harvest to delete it.' },
+      { status: 403 }
+    );
+  }
+
+  // Delete harvest data
+  try {
+    await prisma.harvest.delete({
+      where: {
+        id: params.harvestId,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+    return NextResponse.json(
+      { message: 'Error while deleting harvest' },
+      { status: 500 }
+    );
+  }
+
+  // Delete harvest from participants list
+  try {
+    await prisma.userHarvestParticipations.deleteMany({
+      where: {
+        harvestId: params.harvestId,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+    return NextResponse.json(
+      { message: 'Error while deleting harvest from participants list' },
+      { status: 500 }
+    );
+  }
+
+  return NextResponse.json(
+    { message: 'Harvest deleted successfully' },
     { status: 204 }
   );
 }
