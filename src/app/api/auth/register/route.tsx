@@ -4,6 +4,7 @@ import { z } from 'zod';
 import bcrypt from 'bcrypt';
 import { UserRegistrationDataSchema } from '@/lib/schemas';
 import { randomUUID } from 'crypto';
+import chalk from 'chalk';
 
 export async function POST(req: NextRequest) {
   const submittedUserData: z.infer<typeof UserRegistrationDataSchema> =
@@ -62,9 +63,9 @@ export async function POST(req: NextRequest) {
     email: submittedUserData.email,
   };
 
-  console.log('[🌿 GARTENZEIT] New user signed up');
+  console.log(chalk.bgGreen('[🌿 GARTENZEIT] New user signed up'));
   return NextResponse.json({
-    responseUserObject,
+    user: responseUserObject,
     message: 'User successfully created',
   });
 }
