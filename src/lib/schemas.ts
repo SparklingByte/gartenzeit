@@ -26,3 +26,10 @@ export const HarvestSchema = z.object({
 });
 
 export const HarvestIdSchema = z.string().uuid();
+
+export const HarvestParticipantsSchema = z
+  .object({
+    userId: z.string().uuid('User ID must be a valid UUID'),
+    status: z.enum(['PENDING', 'ACCEPTED', 'REJECTED']),
+  })
+  .array();
