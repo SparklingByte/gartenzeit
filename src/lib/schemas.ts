@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { string, z } from 'zod';
 
 // Zod validations to validate data
 
@@ -33,3 +33,25 @@ export const HarvestParticipantsSchema = z
     status: z.enum(['PENDING', 'ACCEPTED', 'REJECTED']),
   })
   .array();
+
+//* Authentication / user data
+
+export const UserRegistrationDataSchema = z
+  .object({
+    email: z.string().email('Invalid email provided'),
+    username: z
+      .string()
+      .min(3, 'The username needs at least 3 characters')
+      .max(10, 'The username can have a maximum of 10 characters.'),
+    location: z.string().min(3, 'The location needs at least 3 characters'),
+    password: z.string().min(8, 'The passwords needs at least 8 characters'),
+    passwordConfirmation: z
+      .string()
+      .min(8, 'The passwords needs at least 8 characters'),
+  })
+  .refine(
+    (data) => {
+      return data.password === data.passwordConfirmation;
+    },
+    { message: 'The passwords have to match', path: ['passwordConfirmation'] }
+  );
