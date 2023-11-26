@@ -1,38 +1,12 @@
 'use client';
 
-import { z } from 'zod';
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import Button from '@/components/buttons/Button';
 import InputField from '@/components/form/input/InputField';
-
-// Data validation for user registration form
-const userDataSchema = z
-  .object({
-    email: z.string().email('Please provide a valid email like me@hello.com'),
-    username: z
-      .string()
-      .min(3, 'The username needs at least 3 characters')
-      .max(10, 'The username can have a maximum of 10 characters')
-      .regex(
-        new RegExp(/^[a-zA-Z]+[-'s]?[a-zA-Z ]+$/),
-        'The username should contain only alphabets'
-      ),
-    location: z
-      .string()
-      .min(3, 'Please provide an valid location name')
-      .regex(
-        new RegExp(/^[a-zA-Z]+[-'s]?[a-zA-Z ]+$/),
-        'The location name should contain only alphabets'
-      ),
-    password: z.string().min(8, 'The passwords needs at least 8 characters'),
-    passwordConfirmation: z
-      .string()
-      .min(8, 'The passwords needs at least 8 characters'),
-  })
-  .refine((data) => {
-    return data.password === data.passwordConfirmation;
-  }, 'The passwords do not match');
+import { UserRegistrationDataSchema } from '@/lib/schemas';
+import { z } from 'zod';
+import AlertBox from '@/components/ui/display/AlertBox';
 
 // Form component
 export default function UserRegistrationForm() {
@@ -54,34 +28,27 @@ export default function UserRegistrationForm() {
   // Function to submit data to API
   async function handleFormSubmit(form: HTMLFormElement) {
     const userFormData = new FormData(form);
-    const submittedUserData = {
-      username: userFormData.get('username'),
-      email: userFormData.get('email'),
-      location: userFormData.get('location'),
-      password: userFormData.get('password'),
-      passwordConfirmation: userFormData.get('passwordConfirmation'),
+    const submittedUserData: z.infer<typeof UserRegistrationDataSchema> = {
+      username: String(userFormData.get('username')),
+      email: String(userFormData.get('email')),
+      location: String(userFormData.get('location')),
+      password: String(userFormData.get('password')),
+      passwordConfirmation: String(userFormData.get('passwordConfirmation')),
     };
 
     // Front end validation of user data before sending to API
-    const parsedUserData = userDataSchema.safeParse(submittedUserData);
+    const parsedUserData =
+      UserRegistrationDataSchema.safeParse(submittedUserData);
 
     if (parsedUserData.success === false) {
       const formattedErrors = parsedUserData.error.format();
 
-      // Add the password match error message into passwordConfirmation property
-      if (formattedErrors._errors) {
-        formattedErrors.passwordConfirmation?._errors.push(
-          formattedErrors._errors[0]
-        );
-      }
       setInputErrors({
         username: formattedErrors.username?._errors[0],
         email: formattedErrors.email?._errors[0],
         location: formattedErrors.location?._errors[0],
         password: formattedErrors.password?._errors[0],
-        passwordConfirmation:
-          formattedErrors.passwordConfirmation?._errors[0] ||
-          formattedErrors._errors[0],
+        passwordConfirmation: formattedErrors.passwordConfirmation?._errors[0],
       });
       return;
     }
@@ -128,6 +95,13 @@ export default function UserRegistrationForm() {
       }}
       className='grid gap-3 p-5 bg-background-100 rounded-xl'
     >
+      {registerError?.error && (
+        <AlertBox
+          status='error'
+          title='Ooops'
+          message={registerError.message || ''}
+        />
+      )}
       <InputField
         name='username'
         id='username'
@@ -159,7 +133,7 @@ export default function UserRegistrationForm() {
       ></InputField>
       <InputField
         name='passwordConfirmation'
-        id='password'
+        id='passwordConfirmation'
         type='password'
         label='Confirm Your Password'
         errorMessage={inputErrors?.passwordConfirmation}
