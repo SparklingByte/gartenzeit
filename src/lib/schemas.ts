@@ -36,28 +36,38 @@ export const HarvestParticipantsSchema = z
 
 //* Authentication / user data
 
+export const UserEmail = z
+  .string()
+  .email('Please provide a valid email like me@hello.com');
+
+export const UserUsername = z
+  .string()
+  .min(3, 'The username needs at least 3 characters')
+  .max(10, 'The username can have a maximum of 10 characters')
+  .regex(
+    new RegExp(/^[a-zA-Z]+[-'s]?[a-zA-Z ]+$/),
+    'The username should contain only alphabets'
+  );
+
+export const UserLocation = z
+  .string()
+  .min(3, 'Please provide an valid location name')
+  .regex(
+    new RegExp(/^[a-zA-Z]+[-'s]?[a-zA-Z ]+$/),
+    'The location name should contain only alphabets'
+  );
+
+export const UserPassword = z
+  .string()
+  .min(8, 'The passwords needs at least 8 characters');
+
 export const UserRegistrationDataSchema = z
   .object({
-    email: z.string().email('Please provide a valid email like me@hello.com'),
-    username: z
-      .string()
-      .min(3, 'The username needs at least 3 characters')
-      .max(10, 'The username can have a maximum of 10 characters')
-      .regex(
-        new RegExp(/^[a-zA-Z]+[-'s]?[a-zA-Z ]+$/),
-        'The username should contain only alphabets'
-      ),
-    location: z
-      .string()
-      .min(3, 'Please provide an valid location name')
-      .regex(
-        new RegExp(/^[a-zA-Z]+[-'s]?[a-zA-Z ]+$/),
-        'The location name should contain only alphabets'
-      ),
-    password: z.string().min(8, 'The passwords needs at least 8 characters'),
-    passwordConfirmation: z
-      .string()
-      .min(8, 'The passwords needs at least 8 characters'),
+    email: UserEmail,
+    username: UserUsername,
+    location: UserLocation,
+    password: UserPassword,
+    passwordConfirmation: UserPassword,
   })
   .refine(
     (data) => {
@@ -65,3 +75,8 @@ export const UserRegistrationDataSchema = z
     },
     { message: 'The passwords do not match', path: ['passwordConfirmation'] }
   );
+
+export const UserLoginDataSchema = z.object({
+  email: UserEmail,
+  password: UserPassword,
+});
