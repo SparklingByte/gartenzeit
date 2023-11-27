@@ -16,11 +16,12 @@ export default function LoginForm() {
   }>();
 
   const [showSuccessAlert, setShowSuccessAlert] = useState<boolean>();
+  const [showWrongCredentialsAlert, setShowWrongCredentialsAlert] =
+    useState<boolean>();
 
   // Get URL params to display login error and redirect user after login
   const searchParams = useSearchParams();
   const callbackUrlParam = searchParams.get('callbackUrl');
-  const errorCodeParam = searchParams.get('error');
 
   // Validate input from user with zod
   async function validateUserLoginInput(
@@ -51,16 +52,20 @@ export default function LoginForm() {
 
     // Send login request if inputs are valid
     if (validatedUserInput) {
-      setShowSuccessAlert(true);
+      const signInResult = await signIn('credentials', {
+        email: validatedUserInput.email,
+        password: validatedUserInput.password,
+        redirect: false,
+      });
 
-      setTimeout(() => {
-        signIn('credentials', {
-          email: validatedUserInput.email,
-          password: validatedUserInput.password,
-          callbackUrl: callbackUrlParam || '/',
-          redirect: true,
-        });
-      }, 4000);
+      if (signInResult?.ok) {
+        setShowSuccessAlert(true);
+        setTimeout(() => {
+          window.location.href = callbackUrlParam || '/';
+        }, 3000);
+      } else {
+        setShowWrongCredentialsAlert(true);
+      }
     }
   }
 
@@ -68,6 +73,10 @@ export default function LoginForm() {
     <form
       onSubmit={(e) => {
         e.preventDefault();
+
+        // Reset credentials error
+        setShowWrongCredentialsAlert(false);
+
         const formData = new FormData(e.currentTarget);
         handleUserSignIn({
           email: String(formData.get('email')) || '',
@@ -83,7 +92,7 @@ export default function LoginForm() {
           message='The login was successful! You will be redirected shortly.'
         />
       )}
-      {errorCodeParam === 'CredentialsSignin' && (
+      {showWrongCredentialsAlert && (
         <AlertBox
           status='error'
           title='Wrong credentials'

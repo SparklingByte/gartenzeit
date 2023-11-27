@@ -25,6 +25,8 @@ export default function UserRegistrationForm() {
     message: string | null;
   }>();
 
+  const [showSuccessAlert, setShowSuccessAlert] = useState<boolean>();
+
   // Function to submit data to API
   async function handleFormSubmit(form: HTMLFormElement) {
     const userFormData = new FormData(form);
@@ -74,12 +76,15 @@ export default function UserRegistrationForm() {
 
     // Login user if API reponds with user object or log error message
     if (user) {
-      signIn('credentials', {
-        email: user.email,
-        password: parsedUserData.data.password,
-        callbackUrl: window.location.origin,
-        redirect: true,
-      });
+      setShowSuccessAlert(true);
+      setTimeout(() => {
+        signIn('credentials', {
+          email: user.email,
+          password: parsedUserData.data.password,
+          callbackUrl: '/',
+          redirect: true,
+        });
+      }, 3000);
     } else {
       setRegisterError({ error: true, message });
     }
@@ -95,6 +100,13 @@ export default function UserRegistrationForm() {
       }}
       className='grid gap-3 p-5 bg-background-100 rounded-xl'
     >
+      {showSuccessAlert && (
+        <AlertBox
+          status='success'
+          title='Hurray'
+          message='Your account was created successfully. You will now be redirected to the homepage.'
+        />
+      )}
       {registerError?.error && (
         <AlertBox
           status='error'
