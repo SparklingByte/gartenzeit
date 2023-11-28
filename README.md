@@ -2,10 +2,16 @@
 
 ## Next Things To Do
 
-- Add functionality to create harvest form
+- show right user information on homepage
+- user information on profile page
+- API for editing user information
+- harvest data on harvest page
+- harvest data on homepage
+- harvest data on discover page
 
 ## Recently added
 
+- Front-End functionality for creating harvests
 - Pages are secured with authentication
 - API to remove participation in harvest with `DELETE` on `/api/harvest/[harvestId]/participants`
 - API to participate in harvets with `POST` on `/api/harvest/[harvestId]/participants`
