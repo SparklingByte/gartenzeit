@@ -2,7 +2,7 @@
 
 ## Next Things To Do
 
-- ?
+- Secure pages with login
 
 ## Recently added
 
