@@ -1,40 +1,8 @@
-import { string, z } from 'zod';
+import { z } from 'zod';
 
-// Zod validations to validate data
+//* Single user data schema
 
-export const HarvestSchema = z.object({
-  id: z.string().uuid('The id of the harvest has to be a valid UUID'),
-  title: z
-    .string()
-    .min(5, 'The title must contain at least 5 characters.')
-    .max(20, 'The length of the title must not exceed 20 characters.'),
-  description: z
-    .string()
-    .min(10, 'The description must contain at least 10 characters.')
-    .max(200, 'The description must not have more than 200 characters.'),
-  reward: z
-    .string()
-    .min(3, 'The rewards has to have more than 3 characters')
-    .max(50, 'The rewards must not have more than 50 characters.'),
-  produce: z
-    .string()
-    .min(3, 'At least 3 characters for produce')
-    .max(50, 'Maximum of 50 characters for produce'),
-  location: z.string(),
-  dateTime: z.string().datetime(),
-  hostUserId: z.string().uuid('User ID must be a valid UUID'),
-});
-
-export const HarvestIdSchema = z.string().uuid();
-
-export const HarvestParticipantsSchema = z
-  .object({
-    userId: z.string().uuid('User ID must be a valid UUID'),
-    status: z.enum(['PENDING', 'ACCEPTED', 'REJECTED']),
-  })
-  .array();
-
-//* Authentication / user data
+export const UserId = z.string().uuid();
 
 export const UserEmail = z
   .string()
@@ -60,6 +28,65 @@ export const UserLocation = z
 export const UserPassword = z
   .string()
   .min(8, 'The passwords needs at least 8 characters');
+
+//* Single harvest data schema
+
+export const HarvestId = z
+  .string()
+  .uuid('The id of the harvest has to be a valid UUID');
+export const HarvestTitle = z
+  .string()
+  .min(5, 'The title must contain at least 5 characters.')
+  .max(20, 'The length of the title must not exceed 20 characters.');
+export const HarvestDescription = z
+  .string()
+  .min(10, 'The description must contain at least 10 characters.')
+  .max(200, 'The description must not have more than 200 characters.');
+
+export const HarvestReward = z
+  .string()
+  .min(3, 'The rewards has to have more than 3 characters')
+  .max(50, 'The rewards must not have more than 50 characters.');
+
+export const HarvestProduce = z
+  .string()
+  .min(3, 'At least 3 characters for produce')
+  .max(50, 'Maximum of 50 characters for produce');
+
+export const HarvestLocation = z
+  .string()
+  .min(5, 'The location has to contain at least 5 characters.');
+
+export const HarvestDateTime = z.string().datetime();
+
+//* Complex schema
+
+export const HarvestSchema = z.object({
+  id: HarvestId,
+  title: HarvestTitle,
+  description: HarvestDescription,
+  reward: HarvestReward,
+  produce: HarvestProduce,
+  location: HarvestLocation,
+  dateTime: HarvestDateTime,
+  hostUserId: UserId,
+});
+
+export const HarvestCreationSchema = z.object({
+  title: HarvestTitle,
+  description: HarvestDescription,
+  reward: HarvestReward,
+  produce: HarvestProduce,
+  location: HarvestLocation,
+  dateTime: HarvestDateTime,
+});
+
+export const HarvestParticipantsSchema = z
+  .object({
+    userId: z.string().uuid('User ID must be a valid UUID'),
+    status: z.enum(['PENDING', 'ACCEPTED', 'REJECTED']),
+  })
+  .array();
 
 export const UserRegistrationDataSchema = z
   .object({
