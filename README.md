@@ -8,6 +8,7 @@
 - harvest data on harvest page
 - harvest data on homepage
 - harvest data on discover page
+- functionality for uploading user profile image
 
 ## Recently added
 
