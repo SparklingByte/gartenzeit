@@ -2,10 +2,11 @@
 
 ## Next Things To Do
 
-- Secure pages with login
+- Add functionality to create harvest form
 
 ## Recently added
 
+- Pages are secured with authentication
 - API to remove participation in harvest with `DELETE` on `/api/harvest/[harvestId]/participants`
 - API to participate in harvets with `POST` on `/api/harvest/[harvestId]/participants`
 - API to get participants of harvest with `GET` on `/api/harvests/[harvestId]/participants`
