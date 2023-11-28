@@ -1,5 +1,3 @@
-'use client';
-
 import user from './data/user.json';
 import harvest from './data/harvest.json';
 import UserWelcomeCard from '@/components/ui/display/UserWelcomeCard';
@@ -10,8 +8,6 @@ const joinedHarvests = [harvest, harvest, harvest];
 const hostedHarvests = [harvest, harvest, harvest];
 
 export default function Home() {
-  function handleShowAllJoinedHarvests() {}
-
   return (
     <main className='p-5 gap-[40px]'>
       <section className='mb-10'>
