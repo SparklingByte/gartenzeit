@@ -1,23 +1,96 @@
 'use client';
 
+import { useState } from 'react';
+import { z } from 'zod';
+import AlertBox from '@/components/ui/display/AlertBox';
 import Button from '@/components/buttons/Button';
 import InputField from '@/components/form/input/InputField';
 import { useRouter } from 'next/navigation';
+import { HarvestCreationSchema } from '@/lib/schemas';
+import { error } from 'console';
 
 export default function HarvestCreateForm() {
   const router = useRouter();
-  function handleHarvestCreation(form: HTMLFormElement) {
+  const [inputErrors, setInputErrors] = useState<{
+    title: string | undefined;
+    description: string | undefined;
+    reward: string | undefined;
+    produce: string | undefined;
+    location: string | undefined;
+    dateTime: string | undefined;
+  }>();
+
+  const [showSuccessAlert, setShowSuccessAlert] = useState<boolean>();
+  const [errorAlert, setErrorAlert] = useState<string>();
+  const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
+
+  async function handleHarvestCreation(form: HTMLFormElement) {
     const formData = new FormData(form);
 
-    // Get values of input fields
-    const harvestTitle = formData.get('title');
-    const harvestDescription = formData.get('description');
-    const harvestItems = formData.get('items');
-    const harvestAdress = formData.get('adress');
-    const harvestDate = formData.get('date');
-    const harvestTime = formData.get('time');
+    // Reset errors
+    setInputErrors(undefined);
+    setErrorAlert(undefined);
 
-    // TODO Send request to server, get ID of created post and redirect to new harvest page (& show success message)
+    setButtonDisabled(true);
+
+    // Get values of input fields
+    const harvestTitle = String(formData.get('title'));
+    const harvestDescription = String(formData.get('description'));
+    const harvestProduce = String(formData.get('produce'));
+    const HarvestReward = String(formData.get('reward'));
+    const harvestLocation = String(formData.get('location'));
+    let harvestDateTime = formData.get('dateTime');
+    harvestDateTime = harvestDateTime
+      ? new Date(String(harvestDateTime)).toISOString()
+      : '';
+
+    const harvestCreationData: z.infer<typeof HarvestCreationSchema> = {
+      title: harvestTitle,
+      description: harvestDescription,
+      produce: harvestProduce,
+      reward: HarvestReward,
+      location: harvestLocation,
+      dateTime: harvestDateTime,
+    };
+
+    // Validate data from form
+    const parsedData = HarvestCreationSchema.safeParse(harvestCreationData);
+
+    if (parsedData.success === false) {
+      const formattedErrors = parsedData.error.format();
+      setInputErrors({
+        title: formattedErrors.title?._errors[0],
+        description: formattedErrors.description?._errors[0],
+        reward: formattedErrors.reward?._errors[0],
+        produce: formattedErrors.produce?._errors[0],
+        location: formattedErrors.location?._errors[0],
+        dateTime: formattedErrors.dateTime?._errors[0],
+      });
+      setButtonDisabled(false);
+      return;
+    }
+
+    const res = await fetch('/api/harvests', {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+      body: JSON.stringify(harvestCreationData),
+    });
+
+    const resBody = await res.json();
+
+    if (res.ok) {
+      setShowSuccessAlert(true);
+
+      // Redirect user to new created harvest after delay
+      setTimeout(() => {
+        router.push('/harvest/' + resBody.harvestId);
+      }, 2000);
+    } else {
+      setButtonDisabled(false);
+      setErrorAlert(resBody.message);
+    }
   }
 
   return (
@@ -28,14 +101,72 @@ export default function HarvestCreateForm() {
         handleHarvestCreation(e.currentTarget);
       }}
     >
-      <InputField id='title' color='base' label='Title of the harvest' />
-      <InputField id='description' multiline color='base' label='Description' />
-      <InputField id='reward' color='base' label='Whats the reward' />
-      <InputField id='items' color='base' label='What do you want to harvest' />
-      <InputField id='adress' color='base' label='Adress of your garden' />
-      <InputField id='date' type='date' color='base' label='Date of harvest' />
-      <InputField id='time' type='time' color='base' label='Time to start' />
-      <Button showIcon text='Create' type='submit' />
+      {errorAlert && (
+        <AlertBox status='error' title='Error' message={errorAlert} />
+      )}
+      {showSuccessAlert && (
+        <AlertBox
+          status='success'
+          title='Harvest created'
+          message='The harvest was successfully created. You will be redirected to the page of the harvest shortly.'
+        />
+      )}
+      <InputField
+        name='title'
+        id='title'
+        color='base'
+        label='Title of the harvest'
+        errorMessage={inputErrors?.title}
+      />
+      <InputField
+        name='description'
+        id='description'
+        multiline
+        color='base'
+        label='Description'
+        errorMessage={inputErrors?.description}
+      />
+      <InputField
+        name='reward'
+        id='reward'
+        color='base'
+        label='Whats the reward'
+        errorMessage={inputErrors?.reward}
+      />
+      <InputField
+        name='produce'
+        id='produce'
+        color='base'
+        label='What do you want to harvest'
+        errorMessage={inputErrors?.produce}
+      />
+      <InputField
+        name='location'
+        id='location'
+        color='base'
+        label='Location of your garden'
+        errorMessage={inputErrors?.location}
+      />
+      <InputField
+        name='dateTime'
+        id='dateTime'
+        type='datetime-local'
+        color='base'
+        label='Date of harvest'
+        errorMessage={inputErrors?.dateTime}
+      />
+      <Button
+        disabled={buttonDisabled}
+        showIcon={!buttonDisabled}
+        text={
+          buttonDisabled
+            ? showSuccessAlert
+              ? 'Successfully created'
+              : 'Creating...'
+            : 'Create'
+        }
+        type='submit'
+      />
     </form>
   );
 }

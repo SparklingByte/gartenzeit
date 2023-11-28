@@ -1,7 +1,8 @@
+import { z } from 'zod';
 import { prisma } from '@/lib/prismaClient';
 import { NextRequest, NextResponse } from 'next/server';
 import { randomUUID } from 'crypto';
-import { HarvestSchema } from '@/lib/schemas';
+import { HarvestCreationSchema, HarvestSchema } from '@/lib/schemas';
 import { getServerSession } from 'next-auth';
 import { nextAuthConfig } from '../auth/[...nextauth]/route';
 
@@ -22,12 +23,31 @@ export async function POST(req: NextRequest) {
       { status: 401 }
     );
   }
+  let userId;
 
-  const harvestData = await req.json();
+  try {
+    const { id } = await prisma.user.findUniqueOrThrow({
+      where: {
+        email: session.user.email,
+      },
+      select: {
+        id: true,
+      },
+    });
+    userId = id;
+  } catch {
+    return NextResponse.json(
+      { message: 'Error while getting user information' },
+      { status: 500 }
+    );
+  }
+
+  const harvestDataFromClient: z.infer<typeof HarvestCreationSchema> =
+    await req.json();
 
   // Validate provided data
   try {
-    HarvestSchema.parse(harvestData);
+    HarvestCreationSchema.parse(harvestDataFromClient);
   } catch {
     return NextResponse.json(
       { message: 'Invalid data provided to API' },
@@ -35,23 +55,17 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Check if harvest ID already exists to replace
-  // with new random UUID in case
-  const existingHarvestWithId = await prisma.harvest.findUnique({
-    where: {
-      id: harvestData.id,
-    },
-  });
-
-  if (existingHarvestWithId) {
-    harvestData.id = randomUUID();
-  }
+  const completeHarvestData: z.infer<typeof HarvestSchema> = {
+    ...harvestDataFromClient,
+    id: randomUUID(),
+    hostUserId: userId,
+  };
 
   // Store harvest into database
   try {
     await prisma.harvest.create({
       data: {
-        ...harvestData,
+        ...completeHarvestData,
       },
     });
   } catch {
@@ -65,7 +79,7 @@ export async function POST(req: NextRequest) {
   return NextResponse.json(
     {
       message: 'The harvest was successfully created',
-      harvestId: harvestData.id,
+      harvestId: completeHarvestData.id,
     },
     { status: 201 }
   );
