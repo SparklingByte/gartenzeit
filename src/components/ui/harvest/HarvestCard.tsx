@@ -1,69 +1,72 @@
 import Chip from '../display/Chip';
 import Link from 'next/link';
 import StatusIndicator, { IndicatorColor } from '../display/StatusIndicator';
+import { HarvestParticipationStatus, HarvestSchema } from '@/lib/schemas';
+import { z } from 'zod';
 
-type UserParticipationStatus = 'rejected' | 'pending' | 'confirmed';
-
-// TODO Replace with official type
 type HarvestCardProps = {
-  id: string;
-  title: string;
-  userParticipationStatus: UserParticipationStatus;
-  date: string;
-  time: string;
-  locationName: string;
-  vegetables: string[];
+  harvest: z.infer<typeof HarvestSchema>;
+  isOwner?: boolean;
+  participationStatus?: z.infer<typeof HarvestParticipationStatus>;
 };
 
 export default function HarvestCard({
-  id,
-  title,
-  userParticipationStatus,
-  date,
-  time,
-  locationName,
-  vegetables,
+  harvest,
+  isOwner,
+  participationStatus,
 }: HarvestCardProps) {
-  const vegetablesString = vegetables.join(', ');
-
+  // Map for a color and text for the status indicator
   const statusMap: {
-    [key in UserParticipationStatus]: { color: IndicatorColor; text: string };
+    [key in z.infer<typeof HarvestParticipationStatus>]: {
+      color: IndicatorColor;
+      text: string;
+    };
   } = {
-    confirmed: {
+    CONFIRMED: {
       color: 'green',
-      text: 'Confirmed',
+      text: 'Accepted',
     },
-    pending: {
+    PENDING: {
       color: 'red',
       text: 'Pending',
     },
-    rejected: {
+    REJECTED: {
       color: 'red',
       text: 'Rejected',
     },
   };
 
+  let statusContent;
+
+  if (!isOwner && participationStatus !== undefined) {
+    statusContent = (
+      <StatusIndicator
+        color={statusMap[participationStatus].color}
+        text={statusMap[participationStatus].text}
+      />
+    );
+  } else if (isOwner) {
+    statusContent = <Chip text='Hosted by you' color='primary' />;
+  }
+
+  const dateString = new Date(harvest.dateTime).toLocaleDateString();
+
   return (
-    <Link href={'/harvest/' + (id || 'not-found')}>
+    <Link href={'/harvest/' + harvest.id}>
       <article className='flex flex-col gap-5 justify-evenly bg-background-50 text-text-100 rounded-xl p-5'>
-        <StatusIndicator
-          color={statusMap[userParticipationStatus].color}
-          text={statusMap[userParticipationStatus].text}
-        />
-        <h3 className='text-small-heading font-bold'>{title}</h3>
+        <h3 className='text-small-heading font-bold'>{harvest.title}</h3>
         <div className='flex gap-3'>
-          <p>{date}</p>
-          <p>{time}</p>
+          <p>{dateString}</p>
         </div>
         <div>
           <Chip
-            text={locationName}
+            text={harvest.location}
             color={'secondary'}
             icon={'location'}
           ></Chip>
         </div>
         <div>
-          <Chip text={vegetablesString}></Chip>
+          <Chip text={harvest.produce}></Chip>
         </div>
       </article>
     </Link>
