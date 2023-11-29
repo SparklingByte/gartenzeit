@@ -55,7 +55,9 @@ export default function HarvestCard({
         <h3 className='text-small-heading font-bold'>{harvest.title}</h3>
         <div className='flex gap-3'>
           <p>
-            {harvest.dateTime.getDate() + ' | ' + harvest.dateTime.getTime()}
+            {harvest.dateTime.toLocaleDateString() +
+              ' | ' +
+              harvest.dateTime.toLocaleTimeString()}
           </p>
         </div>
         <div>
