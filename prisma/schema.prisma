@@ -50,7 +50,7 @@ model User {
   accounts           Account[]
   sessions           Session[]
   hostedHarvests     Harvest[]
-  joinedHarvests     UserHarvestParticipations[]
+  harvestParticipations     UserHarvestParticipations[]
 }
 
 model Harvest {
