@@ -49,14 +49,14 @@ export default function HarvestCard({
     statusContent = <Chip text='Hosted by you' color='primary' />;
   }
 
-  const dateString = new Date(harvest.dateTime).toLocaleDateString();
-
   return (
     <Link href={'/harvest/' + harvest.id}>
       <article className='flex flex-col gap-5 justify-evenly bg-background-50 text-text-100 rounded-xl p-5'>
         <h3 className='text-small-heading font-bold'>{harvest.title}</h3>
         <div className='flex gap-3'>
-          <p>{dateString}</p>
+          <p>
+            {harvest.dateTime.getDate() + ' | ' + harvest.dateTime.getTime()}
+          </p>
         </div>
         <div>
           <Chip
