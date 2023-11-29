@@ -59,6 +59,12 @@ export const HarvestLocation = z
 
 export const HarvestDateTime = z.string().datetime();
 
+export const HarvestParticipationStatus = z.enum([
+  'PENDING',
+  'CONFIRMED',
+  'REJECTED',
+]);
+
 //* Complex schema
 
 export const HarvestSchema = z.object({
@@ -83,10 +89,15 @@ export const HarvestCreationSchema = z.object({
 
 export const HarvestParticipantsSchema = z
   .object({
-    userId: z.string().uuid('User ID must be a valid UUID'),
-    status: z.enum(['PENDING', 'ACCEPTED', 'REJECTED']),
+    userId: UserId,
+    status: HarvestParticipationStatus,
   })
   .array();
+
+export const HarvestParticipationSchema = z.object({
+  harvest: HarvestSchema,
+  status: HarvestParticipationStatus,
+});
 
 export const UserRegistrationDataSchema = z
   .object({
