@@ -45,12 +45,18 @@ export async function POST(req: NextRequest) {
   const harvestDataFromClient: z.infer<typeof HarvestCreationSchema> =
     await req.json();
 
+  // Change datTime string to Date
+  harvestDataFromClient.dateTime = new Date(harvestDataFromClient.dateTime);
+
   // Validate provided data
   try {
     HarvestCreationSchema.parse(harvestDataFromClient);
-  } catch {
+  } catch (err) {
     return NextResponse.json(
-      { message: 'Invalid data provided to API' },
+      {
+        message:
+          'Invalid data provided to API ' + harvestDataFromClient.dateTime,
+      },
       { status: 400 }
     );
   }
