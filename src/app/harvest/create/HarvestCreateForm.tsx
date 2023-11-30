@@ -37,18 +37,15 @@ export default function HarvestCreateForm() {
     const harvestTitle = String(formData.get('title'));
     const harvestDescription = String(formData.get('description'));
     const harvestProduce = String(formData.get('produce'));
-    const HarvestReward = String(formData.get('reward'));
+    const harvestReward = String(formData.get('reward'));
     const harvestLocation = String(formData.get('location'));
-    let harvestDateTime = formData.get('dateTime');
-    harvestDateTime = harvestDateTime
-      ? new Date(String(harvestDateTime)).toISOString()
-      : '';
+    const harvestDateTime = new Date(String(formData.get('dateTime')));
 
     const harvestCreationData: z.infer<typeof HarvestCreationSchema> = {
       title: harvestTitle,
       description: harvestDescription,
       produce: harvestProduce,
-      reward: HarvestReward,
+      reward: harvestReward,
       location: harvestLocation,
       dateTime: harvestDateTime,
     };
