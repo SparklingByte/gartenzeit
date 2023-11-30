@@ -24,15 +24,15 @@ export default function HarvestCard({
   } = {
     CONFIRMED: {
       color: 'green',
-      text: 'Accepted',
+      text: 'Your participation was confirmed',
     },
     PENDING: {
       color: 'red',
-      text: 'Pending',
+      text: 'Your request is pending',
     },
     REJECTED: {
       color: 'red',
-      text: 'Rejected',
+      text: 'You were rejected from this harvest',
     },
   };
 
