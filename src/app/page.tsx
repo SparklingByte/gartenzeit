@@ -1,41 +1,126 @@
 import user from './data/user.json';
-import harvest from './data/harvest.json';
 import UserWelcomeCard from '@/components/ui/display/UserWelcomeCard';
-import HarvestCardList from '@/components/ui/harvest/HarvestCardList';
+import { getServerSession } from 'next-auth';
+import { redirect } from 'next/navigation';
+import { prisma } from '@/lib/prismaClient';
+import SectionTitle from '@/components/ui/display/SectionTitle';
+import HarvestCard from '@/components/ui/harvest/HarvestCard';
+import CalloutBox from '@/components/ui/display/CalloutBox';
+import Button from '@/components/buttons/Button';
+import Link from 'next/link';
 
-// Mock data
-const joinedHarvests = [harvest, harvest, harvest];
-const hostedHarvests = [harvest, harvest, harvest];
+async function getJoinedUserHarvests(userEmail: string) {
+  // Query harvest data and status of participation of user (is not equal to harvest!)
+  const harvestsWithParticipationStatus =
+    await prisma.userHarvestParticipations.findMany({
+      where: {
+        user: {
+          email: userEmail,
+        },
+      },
+      select: {
+        harvest: true,
+        status: true,
+      },
+    });
 
-export default function Home() {
+  return harvestsWithParticipationStatus;
+}
+
+async function getHostedHarvests(userEmail: string) {
+  const harvests = await prisma.harvest.findMany({
+    where: {
+      host: {
+        email: userEmail,
+      },
+    },
+  });
+
+  return harvests;
+}
+
+export default async function Home() {
+  const session = await getServerSession();
+
+  if (!session || !session.user?.email) {
+    return redirect('/login');
+  }
+
+  const joinedHarvestsWithParticipationStatus = await getJoinedUserHarvests(
+    session.user.email
+  );
+  const joinedHarvestsContent = (
+    <>
+      <SectionTitle
+        title='Your joined harvests'
+        linkPathname='/me/harvests/joined'
+        linkText={
+          joinedHarvestsWithParticipationStatus.length > 0
+            ? 'Show all'
+            : undefined
+        }
+      />
+      {joinedHarvestsWithParticipationStatus.length > 0 ? (
+        joinedHarvestsWithParticipationStatus.map((entry) => {
+          return (
+            <HarvestCard
+              key={entry.harvest.id}
+              harvest={entry.harvest}
+              participationStatus={entry.status}
+              isOwner={false}
+            />
+          );
+        })
+      ) : (
+        <CalloutBox
+          title='No harvests to display'
+          description='You have not joined any harvests yet.'
+        >
+          <Link href={'/discover'}>
+            <Button showIcon={false} text='Discover some' />
+          </Link>
+        </CalloutBox>
+      )}{' '}
+    </>
+  );
+
+  const hostedHarvests = await getHostedHarvests(session.user.email);
+  const hostedHarvestsContent = (
+    <>
+      <SectionTitle
+        title='Your hosted harvests'
+        linkPathname='/me/harvests/hosted'
+        linkText={hostedHarvests.length > 0 ? 'Show all' : undefined}
+      />
+      {hostedHarvests.length > 0 ? (
+        hostedHarvests.map((harvest) => {
+          return (
+            <HarvestCard key={harvest.id} harvest={harvest} isOwner={true} />
+          );
+        })
+      ) : (
+        <CalloutBox
+          title='No harvests to display'
+          description='You have not hosted any harvests yet.'
+        >
+          <Link href={'/create'}>
+            <Button showIcon={false} text='Create a harvest' />
+          </Link>
+        </CalloutBox>
+      )}{' '}
+    </>
+  );
+
   return (
-    <main className='p-5 gap-[40px]'>
+    <main className='p-5 gap-10'>
       <section className='mb-10'>
         <UserWelcomeCard
           username={user.username}
           userProfileImage={user.image}
         />
       </section>
-      <section className='grid gap-[40px]'>
-        <HarvestCardList
-          harvestPosts={joinedHarvests}
-          title='Your joined harvests'
-          showAllPathname='/me/harvests/joined'
-          noEntriesTitle='Nothing to show'
-          noEntriesDescription="You haven't joined any harvests yet."
-          noEntriesButtonText='Discover harvests'
-          calloutButtonPathname='/discover'
-        ></HarvestCardList>
-        <HarvestCardList
-          harvestPosts={[]}
-          title='Your created harvests'
-          showAllPathname='/me/harvests/created'
-          noEntriesTitle='Nothing to show'
-          noEntriesDescription="You haven't created any harvests yet."
-          noEntriesButtonText='Create a harvest'
-          calloutButtonPathname='/harvest/create'
-        ></HarvestCardList>
-      </section>
+      <section className='grid gap-5 mb-10'>{joinedHarvestsContent}</section>
+      <section className='grid gap-5'>{hostedHarvestsContent}</section>
     </main>
   );
 }
