@@ -46,6 +46,12 @@ export default async function Home() {
     return redirect('/login');
   }
 
+  const userData = await prisma.user.findUnique({
+    where: {
+      email: session.user.email,
+    },
+  });
+
   const joinedHarvestsWithParticipationStatus = await getJoinedUserHarvests(
     session.user.email
   );
@@ -115,8 +121,9 @@ export default async function Home() {
     <main className='p-5 gap-10'>
       <section className='mb-10'>
         <UserWelcomeCard
-          username={user.username}
-          userProfileImage={user.image}
+          username={userData?.username || 'Unknown User'}
+          // TODO Replace with placeholder image
+          userProfileImage={userData?.image || ''}
         />
       </section>
       <section className='grid gap-5 mb-10'>{joinedHarvestsContent}</section>
