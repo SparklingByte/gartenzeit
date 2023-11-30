@@ -52,6 +52,7 @@ export default function HarvestCard({
   return (
     <Link href={'/harvest/' + harvest.id}>
       <article className='flex flex-col gap-5 justify-evenly bg-background-50 text-text-100 rounded-xl p-5'>
+        {statusContent}
         <h3 className='text-small-heading font-bold'>{harvest.title}</h3>
         <div className='flex gap-3'>
           <p>
