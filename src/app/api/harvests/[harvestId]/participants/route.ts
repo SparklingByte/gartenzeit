@@ -1,6 +1,6 @@
 import { nextAuthConfig } from '@/app/api/auth/[...nextauth]/route';
 import { prisma } from '@/lib/prismaClient';
-import { HarvestIdSchema, HarvestParticipantsSchema } from '@/lib/schemas';
+import { HarvestId, HarvestParticipantsSchema } from '@/lib/schemas';
 import { randomUUID } from 'crypto';
 import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
@@ -13,7 +13,7 @@ export async function GET(
 ) {
   // Validate harvest id
   try {
-    HarvestIdSchema.parse(params.harvestId);
+    HarvestId.parse(params.harvestId);
   } catch {
     return NextResponse.json(
       { message: 'The provided Harvest ID is invalid' },
@@ -62,7 +62,7 @@ export async function POST(
 
   // Validating harvest ID
   try {
-    HarvestIdSchema.parse(params.harvestId);
+    HarvestId.parse(params.harvestId);
   } catch {
     return NextResponse.json(
       { message: 'Invalid harvest ID' },
@@ -99,7 +99,7 @@ export async function POST(
       throw new Error('You cannot join your own harvest');
     }
 
-    if (harvestData.dateTime.toDateString() > new Date().toDateString()) {
+    if (harvestData.dateTime.getTime() < new Date().getTime()) {
       throw new Error('Cannot join a harvest that is already over');
     }
 
@@ -151,7 +151,7 @@ export async function DELETE(
 
   // Validating harvest ID
   try {
-    HarvestIdSchema.parse(params.harvestId);
+    HarvestId.parse(params.harvestId);
   } catch {
     return NextResponse.json(
       { message: 'Invalid harvest ID' },
