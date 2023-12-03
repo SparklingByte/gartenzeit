@@ -1,8 +1,6 @@
 import PageTitle from '@/components/ui/display/PageTitle';
 import SectionTitle from '@/components/ui/display/SectionTitle';
 import TopActionMenuBar from '@/components/ui/navigation/TopActionMenuBar';
-import InputField from '@/components/form/input/InputField';
-import Button from '@/components/buttons/Button';
 import { getServerSession } from 'next-auth';
 import ChangeEmailForm from './change-email-form';
 import { redirect } from 'next/navigation';
