@@ -128,7 +128,7 @@ export const UserLoginDataSchema = z.object({
 
 export const PublicUserDataSchema = z.object({
   username: UserUsername,
-  location: UserLocation.optional(),
-  description: UserDescription.optional(),
-  image: UserImage.optional(),
+  location: UserLocation.nullable(),
+  description: UserDescription.nullable(),
+  image: UserImage.nullable(),
 });

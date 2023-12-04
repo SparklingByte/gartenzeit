@@ -47,9 +47,9 @@ export async function GET(req: NextRequest, { params }: UserIdParams) {
 
   const filteredUserData: z.infer<typeof PublicUserDataSchema> = {
     username: user.username,
-    description: user.description || undefined,
-    image: user.image || undefined,
-    location: user.location || undefined,
+    description: user.description,
+    image: user.image,
+    location: user.location,
   };
 
   return Response.json(
