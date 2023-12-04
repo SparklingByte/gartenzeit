@@ -5,6 +5,9 @@ import { getServerSession } from 'next-auth';
 import ChangeEmailForm from './change-email-form';
 import { redirect } from 'next/navigation';
 import ChangePasswordForm from './change-password-form';
+import Button from '@/components/buttons/Button';
+import Link from 'next/link';
+import LogoutButton from './logout-button';
 
 export default async function ProfileSettingsPage() {
   const session = await getServerSession();
@@ -28,6 +31,10 @@ export default async function ProfileSettingsPage() {
       <section className='grid gap-5'>
         <SectionTitle title='Change your password' />
         <ChangePasswordForm />
+      </section>
+      <section className='grid gap-5'>
+        <SectionTitle title='Other' />
+        <LogoutButton />
       </section>
     </main>
   );
