@@ -25,9 +25,15 @@ export const UserLocation = z
     'The location name should contain only alphabets'
   );
 
+export const UserDescription = z
+  .string()
+  .max(200, 'The description can have a maximum of 200 characters');
+
 export const UserPassword = z
   .string()
   .min(8, 'The passwords needs at least 8 characters');
+
+export const UserImage = z.string().url();
 
 //* Single harvest data schema
 
@@ -118,4 +124,11 @@ export const UserRegistrationDataSchema = z
 export const UserLoginDataSchema = z.object({
   email: UserEmail,
   password: UserPassword,
+});
+
+export const PublicUserDataSchema = z.object({
+  username: UserUsername,
+  location: UserLocation.optional(),
+  description: UserDescription.optional(),
+  image: UserImage.optional(),
 });
