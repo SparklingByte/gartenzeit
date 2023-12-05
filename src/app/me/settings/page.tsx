@@ -48,16 +48,16 @@ export default async function ProfileSettingsPage() {
         <SectionTitle title='Change your password' />
         <ChangePasswordForm />
       </section>
-      <section className='grid gap-5'>
-        <SectionTitle title='Other' />
-        <LogoutButton />
-      </section>
       <section>
         <SectionTitle title='Change your profile description' />
         <ChangeDescriptionForm
           userId={user.id}
           oldDescriptionPlaceholder={user.description}
         />
+      </section>
+      <section className='grid gap-5'>
+        <SectionTitle title='Other' />
+        <LogoutButton />
       </section>
     </main>
   );
