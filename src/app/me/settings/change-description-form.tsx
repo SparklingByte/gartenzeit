@@ -65,6 +65,7 @@ export default function ChangeDescriptionForm({
         />
       )}
       <InputField
+        multiline={true}
         color='base'
         label='Your Description'
         value={newDescription}
