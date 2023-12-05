@@ -58,7 +58,7 @@ export async function GET(req: NextRequest, { params }: UserIdParams) {
   );
 }
 
-async function changeEmail(userId: string, newEmail: string) {
+async function updateEmail(userId: string, newEmail: string) {
   const parsedEmail = UserEmail.safeParse(newEmail);
 
   // Parse new Email
@@ -145,7 +145,7 @@ export async function PATCH(req: NextRequest, { params }: UserIdParams) {
   // If request body contains newEmail, try to update the email
   if (newEmail) {
     try {
-      await changeEmail(user.id, newEmail);
+      await updateEmail(user.id, newEmail);
     } catch (err) {
       return Response.json({ message: err }, { status: 500 });
     }
