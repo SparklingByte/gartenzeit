@@ -6,6 +6,7 @@ import { getServerSession } from 'next-auth';
 import { prisma } from '@/lib/prismaClient';
 import { redirect } from 'next/navigation';
 import { Paragraph } from '@/components/typography/Typography';
+import DeleteHarvestButton from './delete-harvest-button';
 
 export default async function HarvestSettingsPage({
   params,
@@ -71,6 +72,10 @@ export default async function HarvestSettingsPage({
             />
           );
         })}
+      </section>
+      <section className='grid gap-5'>
+        <SectionTitle title='Manage the harvest'></SectionTitle>
+        <DeleteHarvestButton harvestId={harvest.id}></DeleteHarvestButton>
       </section>
     </main>
   );
