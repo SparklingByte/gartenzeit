@@ -1,4 +1,3 @@
-import user from './data/user.json';
 import UserWelcomeCard from '@/components/ui/display/UserWelcomeCard';
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
@@ -109,7 +108,7 @@ export default async function Home() {
           title='No harvests to display'
           description='You have not hosted any harvests yet.'
         >
-          <Link href={'/create'}>
+          <Link href={'/harvest/create'}>
             <Button showIcon={false} text='Create a harvest' />
           </Link>
         </CalloutBox>
