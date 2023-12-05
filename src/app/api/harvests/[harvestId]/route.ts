@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
 import { nextAuthConfig } from '../../auth/[...nextauth]/route';
 import { z } from 'zod';
-import { HarvestIdSchema, HarvestSchema } from '@/lib/schemas';
+import { HarvestId, HarvestSchema } from '@/lib/schemas';
 
 //* Responding with data of harvest
 export async function GET(
@@ -123,7 +123,7 @@ export async function DELETE(
 
   // Check if provided harvest id is valid
   try {
-    HarvestIdSchema.parse(params.harvestId);
+    HarvestId.parse(params.harvestId);
   } catch {
     return NextResponse.json(
       { message: 'No valid HarvestId provided.' },
@@ -189,6 +189,6 @@ export async function DELETE(
 
   return NextResponse.json(
     { message: 'Harvest deleted successfully' },
-    { status: 204 }
+    { status: 200 }
   );
 }
