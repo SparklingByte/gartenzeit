@@ -5,9 +5,22 @@ import { getServerSession } from 'next-auth';
 import ChangeEmailForm from './change-email-form';
 import { redirect } from 'next/navigation';
 import ChangePasswordForm from './change-password-form';
-import Button from '@/components/buttons/Button';
-import Link from 'next/link';
 import LogoutButton from './logout-button';
+import ChangeDescriptionForm from './change-description-form';
+import { prisma } from '@/lib/prismaClient';
+
+async function getUserByEmail(email: string) {
+  try {
+    const dbQuery = await prisma.user.findUniqueOrThrow({
+      where: {
+        email,
+      },
+    });
+    return dbQuery;
+  } catch {
+    return null;
+  }
+}
 
 export default async function ProfileSettingsPage() {
   const session = await getServerSession();
@@ -16,7 +29,10 @@ export default async function ProfileSettingsPage() {
     return redirect('/login');
   }
 
-  const { user } = session;
+  const user = await getUserByEmail(session.user?.email || '');
+  if (!user) {
+    return redirect('/login');
+  }
 
   return (
     <main className='grid gap-6 p-5'>
@@ -35,6 +51,13 @@ export default async function ProfileSettingsPage() {
       <section className='grid gap-5'>
         <SectionTitle title='Other' />
         <LogoutButton />
+      </section>
+      <section>
+        <SectionTitle title='Change your profile description' />
+        <ChangeDescriptionForm
+          userId={user.id}
+          oldDescriptionPlaceholder={user.description}
+        />
       </section>
     </main>
   );
