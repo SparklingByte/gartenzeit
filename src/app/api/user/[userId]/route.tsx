@@ -147,7 +147,7 @@ export async function PATCH(req: NextRequest, { params }: UserIdParams) {
     try {
       await updateEmail(user.id, newEmail);
     } catch (err) {
-      return Response.json({ message: err }, { status: 500 });
+      return Response.json({ message: err.message }, { status: 500 });
     }
 
     return Response.json(
@@ -161,7 +161,7 @@ export async function PATCH(req: NextRequest, { params }: UserIdParams) {
     try {
       await updateDescription(user.id, newDescription);
     } catch (err) {
-      return Response.json({ message: err }, { status: 500 });
+      return Response.json({ message: err.message }, { status: 500 });
     }
 
     return Response.json(
