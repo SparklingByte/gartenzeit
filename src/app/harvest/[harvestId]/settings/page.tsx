@@ -63,14 +63,7 @@ export default async function HarvestSettingsPage({
           <Paragraph>There are no participants yet.</Paragraph>
         )}
         {participations.map(({ user }) => {
-          return (
-            <UserCard
-              key={user.id}
-              username={user.username}
-              locationName={user.location || 'Unknown Location'}
-              userProfilePicture={user.image || ''}
-            />
-          );
+          return <UserCard key={user.id} user={user} />;
         })}
       </section>
       <section className='grid gap-5'>
