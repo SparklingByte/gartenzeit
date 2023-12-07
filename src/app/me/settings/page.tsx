@@ -25,6 +25,8 @@ async function getUserByEmail(email: string) {
 export default async function ProfileSettingsPage() {
   const session = await getServerSession();
 
+  const SECTION_CLASSNAME = 'grid gap-5';
+
   if (!session) {
     return redirect('/login');
   }
@@ -38,24 +40,25 @@ export default async function ProfileSettingsPage() {
     <main className='grid gap-6 p-5'>
       <TopActionMenuBar hasBackItem />
       <PageTitle title='Account settings' />
-      <section className='grid gap-5'>
+      <section className={SECTION_CLASSNAME}>
         <SectionTitle title='Change your details' />
         <ChangeEmailForm
+          userId={user.id}
           oldEmailPlaceholder={user?.email || ''}
         ></ChangeEmailForm>
       </section>
-      <section className='grid gap-5'>
+      <section className={SECTION_CLASSNAME}>
         <SectionTitle title='Change your password' />
         <ChangePasswordForm />
       </section>
-      <section>
+      <section className={SECTION_CLASSNAME}>
         <SectionTitle title='Change your profile description' />
         <ChangeDescriptionForm
           userId={user.id}
           oldDescriptionPlaceholder={user.description}
         />
       </section>
-      <section className='grid gap-5'>
+      <section className={SECTION_CLASSNAME}>
         <SectionTitle title='Other' />
         <LogoutButton />
       </section>
