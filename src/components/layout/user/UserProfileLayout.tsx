@@ -21,16 +21,10 @@ export default function UserProfileLayout({
       <div className='grid gap-6'>
         <div className='flex items-center gap-5'>
           <PageTitle title={'Profile'} />
-          {isOwnProfile && (
-            <Chip text='Your profile' color='primary'></Chip>
-          )}
+          {isOwnProfile && <Chip text='Your profile' color='primary'></Chip>}
         </div>
         <div className='grid gap-5'>
-          <UserCard
-            username={user.username}
-            locationName={user.location || 'Unknown Location'}
-            userProfilePicture={user.image || ''}
-          />
+          <UserCard user={user} />
           <TextCard
             title='About me'
             text={user.description || 'No description yet'}
