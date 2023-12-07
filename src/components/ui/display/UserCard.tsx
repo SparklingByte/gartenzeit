@@ -2,36 +2,32 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Heading, Paragraph } from '../../typography/Typography';
 import { FaLocationDot } from 'react-icons/fa6';
+import { PublicUserDataSchema } from '@/lib/schemas';
+import { z } from 'zod';
 
 type UserCardProps = {
-  username: string;
-  userProfilePicture: string;
-  locationName: string;
+  user: z.infer<typeof PublicUserDataSchema>;
 };
 
 const PROFILE_PICTURE_SIZE = 40;
 
-export default function UserCard({
-  username,
-  userProfilePicture,
-  locationName,
-}: UserCardProps) {
+export default function UserCard({ user }: UserCardProps) {
   return (
     <div className='flex items-center gap-3 p-5 bg-background-50 rounded-xl'>
-      <Link href={'/user/' + username}>
+      <Link href={'/user/' + user.username}>
         <Image
-          alt={`Profile picture of ${username}`}
+          alt={`Profile picture of ${user.username}`}
           width={PROFILE_PICTURE_SIZE}
           height={PROFILE_PICTURE_SIZE}
-          src={userProfilePicture}
+          src={user.image || ''} // TODO Replace with placeholder image
           className='bg-text-100 rounded-md'
         />
       </Link>
       <div>
-        <Heading size='small'>{username}</Heading>
+        <Heading size='small'>{user.username}</Heading>
         <div className='flex gap-1 items-center'>
           <FaLocationDot />
-          <Paragraph>{locationName}</Paragraph>
+          <Paragraph>{user.location}</Paragraph>
         </div>
       </div>
     </div>
