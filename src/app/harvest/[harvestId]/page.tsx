@@ -7,6 +7,7 @@ import { prisma } from '@/lib/prismaClient';
 import { redirect } from 'next/navigation';
 import { getServerSession } from 'next-auth';
 import HarvestJoinButton from './harvest-join-button';
+import UserCard from '@/components/ui/display/UserCard';
 
 export default async function HarvestPage({
   params,
@@ -71,10 +72,7 @@ export default async function HarvestPage({
       <TopActionMenuBar hasBackItem hasSettingsItem={isHost} />
       <div className='grid gap-5'>
         <PageTitle title={harvest.title} subtitle='Harvest'></PageTitle>
-        <AuthorCard
-          username={harvest.host.username}
-          userProfilePicture={harvest.host.image || ''}
-        />
+        <AuthorCard user={harvest.host} />
       </div>
       <section className='grid gap-5'>
         <SectionTitle title='About the harvest' />
@@ -99,6 +97,20 @@ export default async function HarvestPage({
             harvest.dateTime.toLocaleTimeString()
           }
         ></TextCard>
+      </section>
+      <section className='grid gap-5'>
+        <SectionTitle title='Who is going to come?'></SectionTitle>
+        {harvest.participations.length > 0 ? (
+          harvest.participations.map((participation) => {
+            const { user } = participation;
+            return <UserCard key={user.id} user={user}></UserCard>;
+          })
+        ) : (
+          <TextCard
+            title='No participants'
+            text='No members joined this harvest so far'
+          ></TextCard>
+        )}
       </section>
       <section className='grid p-5 bg-background-50 rounded-xl'>
         <HarvestJoinButton
