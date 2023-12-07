@@ -14,6 +14,7 @@ export default function LoginForm() {
     email: z.infer<typeof UserEmail> | undefined;
     password: z.infer<typeof UserPassword> | undefined;
   }>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [showSuccessAlert, setShowSuccessAlert] = useState<boolean>();
   const [showWrongCredentialsAlert, setShowWrongCredentialsAlert] =
@@ -48,6 +49,7 @@ export default function LoginForm() {
   async function handleUserSignIn(
     userLoginInput: z.infer<typeof UserLoginDataSchema>
   ) {
+    setIsLoading(true);
     const validatedUserInput = await validateUserLoginInput(userLoginInput);
 
     // Send login request if inputs are valid
@@ -63,10 +65,13 @@ export default function LoginForm() {
         setTimeout(() => {
           window.location.href = callbackUrlParam || '/';
         }, 3000);
+        return;
       } else {
+        setIsLoading(false);
         setShowWrongCredentialsAlert(true);
       }
     }
+    setIsLoading(false);
   }
 
   return (
@@ -115,7 +120,13 @@ export default function LoginForm() {
         color='base'
       ></InputField>
       <div className='grid mt-3 w-full'>
-        <Button showIcon text='Login'></Button>
+        <Button
+          isLoading={isLoading}
+          loadingText='Logging you in...'
+          disabled={isLoading}
+          showIcon
+          text='Login'
+        ></Button>
       </div>
     </form>
   );

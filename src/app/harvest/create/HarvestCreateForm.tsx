@@ -22,16 +22,18 @@ export default function HarvestCreateForm() {
 
   const [showSuccessAlert, setShowSuccessAlert] = useState<boolean>();
   const [errorAlert, setErrorAlert] = useState<string>();
-  const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
+  const [loading, setLoading] = useState<{ isLoading: boolean; text?: string }>(
+    { isLoading: false }
+  );
 
   async function handleHarvestCreation(form: HTMLFormElement) {
+    setLoading({ isLoading: true, text: 'Creating harvest...' });
+
     const formData = new FormData(form);
 
     // Reset errors
     setInputErrors(undefined);
     setErrorAlert(undefined);
-
-    setButtonDisabled(true);
 
     // Get values of input fields
     const harvestTitle = String(formData.get('title'));
@@ -63,7 +65,7 @@ export default function HarvestCreateForm() {
         location: formattedErrors.location?._errors[0],
         dateTime: formattedErrors.dateTime?._errors[0],
       });
-      setButtonDisabled(false);
+      setLoading({ isLoading: false });
       return;
     }
 
@@ -79,13 +81,14 @@ export default function HarvestCreateForm() {
 
     if (res.ok) {
       setShowSuccessAlert(true);
+      setLoading({ isLoading: true, text: 'Redirecting to harvest...' });
 
       // Redirect user to new created harvest after delay
       setTimeout(() => {
         router.push('/harvest/' + resBody.harvestId);
       }, 2000);
     } else {
-      setButtonDisabled(false);
+      setLoading({ isLoading: false });
       setErrorAlert(resBody.message);
     }
   }
@@ -153,15 +156,11 @@ export default function HarvestCreateForm() {
         errorMessage={inputErrors?.dateTime}
       />
       <Button
-        disabled={buttonDisabled}
-        showIcon={!buttonDisabled}
-        text={
-          buttonDisabled
-            ? showSuccessAlert
-              ? 'Successfully created'
-              : 'Creating...'
-            : 'Create'
-        }
+        isLoading={loading.isLoading}
+        loadingText={loading.text}
+        showIcon={true}
+        disabled={loading.isLoading}
+        text='Create'
         type='submit'
       />
     </form>

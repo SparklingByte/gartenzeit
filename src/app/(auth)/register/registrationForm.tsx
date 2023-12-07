@@ -26,9 +26,12 @@ export default function UserRegistrationForm() {
   }>();
 
   const [showSuccessAlert, setShowSuccessAlert] = useState<boolean>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // Function to submit data to API
   async function handleFormSubmit(form: HTMLFormElement) {
+    setIsLoading(true);
+
     const userFormData = new FormData(form);
     const submittedUserData: z.infer<typeof UserRegistrationDataSchema> = {
       username: String(userFormData.get('username')),
@@ -52,6 +55,7 @@ export default function UserRegistrationForm() {
         password: formattedErrors.password?._errors[0],
         passwordConfirmation: formattedErrors.passwordConfirmation?._errors[0],
       });
+      setIsLoading(false);
       return;
     }
 
@@ -87,6 +91,7 @@ export default function UserRegistrationForm() {
       }, 3000);
     } else {
       setRegisterError({ error: true, message });
+      setIsLoading(false);
     }
   }
 
@@ -152,7 +157,13 @@ export default function UserRegistrationForm() {
         color='base'
       ></InputField>
       <div className='mt-3 grid'>
-        <Button showIcon text='Join' />
+        <Button
+          isLoading={isLoading}
+          disabled={isLoading}
+          loadingText='Creating account...'
+          showIcon
+          text='Join'
+        />
       </div>
     </form>
   );

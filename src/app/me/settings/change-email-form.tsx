@@ -23,14 +23,17 @@ export default function ChangeEmailForm({
     status: 'success' | 'error';
     message: string;
   }>();
+  const [showButtonLoading, setShowButtonLoading] = useState<boolean>(false);
 
   async function handleEmailChange() {
     // Reset error & parse data
     setAlert(undefined);
     setInputError(undefined);
+    setShowButtonLoading(true);
     const parsedData = UserEmail.safeParse(newEmail);
 
     if (parsedData.success === false) {
+      setShowButtonLoading(false);
       setInputError(parsedData.error.format()._errors[0]);
       return;
     }
@@ -47,6 +50,7 @@ export default function ChangeEmailForm({
 
     if (!res.ok) {
       setAlert({ title: 'Error', status: 'error', message: resBody.message });
+      setShowButtonLoading(false);
       return;
     }
 
@@ -59,7 +63,7 @@ export default function ChangeEmailForm({
     // Let user login again
     setTimeout(() => {
       signOut();
-    }, 2000);
+    }, 1000);
   }
 
   return (
@@ -86,7 +90,14 @@ export default function ChangeEmailForm({
           You will have to login again after changing your email.
         </Paragraph>
       </div>
-      <Button showIcon={false} text='Save' onClick={handleEmailChange} />
+      <Button
+        isLoading={showButtonLoading}
+        loadingText='Saving...'
+        disabled={showButtonLoading || newEmail === oldEmailPlaceholder}
+        showIcon={false}
+        text='Save'
+        onClick={handleEmailChange}
+      />
     </>
   );
 }

@@ -6,6 +6,7 @@ import { UserHarvestParticipationStatus } from '@prisma/client';
 import { HarvestTitle } from '@/lib/schemas';
 import StatusIndicator from '@/components/ui/display/StatusIndicator';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 type HarvestJoinButtonProps = {
   harvestId: z.infer<typeof HarvestTitle>;
@@ -21,10 +22,16 @@ export default function HarvestJoinButton({
   participationStatus,
 }: HarvestJoinButtonProps) {
   const router = useRouter();
+  const [loading, setLoading] = useState<{ isLoading: boolean; text: string }>({
+    isLoading: false,
+    text: 'Loading...',
+  });
+
   let buttonText;
   let isDisabled;
 
   async function handleJoinHarvest() {
+    setLoading({ isLoading: true, text: 'Joining harvest...' });
     const res = await fetch(`/api/harvests/${harvestId}/participants`, {
       method: 'POST',
     });
@@ -32,13 +39,17 @@ export default function HarvestJoinButton({
 
     // Refresh the page
     if (res.ok) {
+      setLoading({ isLoading: false, text: 'Joining harvest...' });
       return router.refresh();
     } else {
       console.error(resData.message);
+      setLoading({ isLoading: false, text: 'Joining harvest...' });
     }
   }
 
   async function handleLeaveHarvest() {
+    setLoading({ isLoading: true, text: 'Leaving harvest...' });
+
     const res = await fetch(`/api/harvests/${harvestId}/participants`, {
       method: 'DELETE',
     });
@@ -46,9 +57,11 @@ export default function HarvestJoinButton({
 
     // Refresh the page
     if (res.ok) {
+      setLoading({ isLoading: false, text: 'Leaving harvest...' });
       return router.refresh();
     } else {
       console.error(resData.message);
+      setLoading({ isLoading: false, text: 'Leaving harvest...' });
     }
   }
 
@@ -93,8 +106,10 @@ export default function HarvestJoinButton({
         ></StatusIndicator>
       )}
       <Button
+        isLoading={loading.isLoading}
+        loadingText={loading.text}
         text={buttonText || '⚠️ ERROR'}
-        disabled={isDisabled}
+        disabled={isDisabled || loading.isLoading}
         showIcon={true}
         onClick={() => {
           if (!hasJoined) {

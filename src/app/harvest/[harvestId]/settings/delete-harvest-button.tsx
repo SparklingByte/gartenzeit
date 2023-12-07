@@ -11,9 +11,14 @@ export default function DeleteHarvestButton({
   harvestId: string;
 }) {
   const [showSuccessAlert, setShowSuccessAlert] = useState<boolean>();
+  const [loading, setLoading] = useState<{ isLoading: boolean; text?: string }>(
+    { isLoading: false }
+  );
   const router = useRouter();
 
   async function handleHarvestDelete() {
+    setLoading({ isLoading: true, text: 'Deleting harvest...' });
+
     // Reset alert box
     setShowSuccessAlert(false);
     const res = await fetch(`/api/harvests/${harvestId}`, {
@@ -25,15 +30,18 @@ export default function DeleteHarvestButton({
 
     if (!res.ok) {
       console.error(resBody.message);
+      setLoading({ isLoading: false });
       return;
     }
 
     setShowSuccessAlert(true);
 
-    // Redirect user after 3 seconds
+    // Redirect user after 2 seconds
+    setLoading({ isLoading: true, text: 'Redirecting to homepage...' });
+
     setTimeout(() => {
       router.replace('/');
-    }, 3000);
+    }, 2000);
   }
 
   return (
@@ -46,9 +54,11 @@ export default function DeleteHarvestButton({
         ></AlertBox>
       )}
       <Button
+        isLoading={loading.isLoading}
+        loadingText={loading.text}
         text='Delete harvest'
         showIcon={false}
-        disabled={showSuccessAlert}
+        disabled={loading.isLoading}
         onClick={() => {
           handleHarvestDelete();
         }}

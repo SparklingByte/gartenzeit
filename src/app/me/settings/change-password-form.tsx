@@ -15,17 +15,20 @@ export default function ChangePasswordForm() {
     status: 'success' | 'error';
     message: string;
   }>();
+  const [showButtonLoading, setShowButtonLoading] = useState<boolean>(false);
 
   async function handlePasswordChange() {
     // Reset alerts
     setAlert(undefined);
     setInputError(undefined);
 
+    setShowButtonLoading(true);
     // Validate password
     const parsedData = UserPassword.safeParse(newPassword);
 
     if (parsedData.success === false) {
       setInputError(parsedData.error.format()._errors[0]);
+      setShowButtonLoading(false);
       return;
     }
 
@@ -43,6 +46,7 @@ export default function ChangePasswordForm() {
     // Show error message to user
     if (!res.ok) {
       setAlert({ title: 'Error', status: 'error', message: resBody.message });
+      setShowButtonLoading(false);
       return;
     }
 
@@ -52,6 +56,12 @@ export default function ChangePasswordForm() {
       status: 'success',
       message: 'Your password was successfully updated.',
     });
+
+    setShowButtonLoading(false);
+
+    // Empty input fields
+    setNewPassword('');
+    setOldPassword('');
   }
 
   return (
@@ -82,7 +92,14 @@ export default function ChangePasswordForm() {
         }}
         errorMessage={inputError}
       />
-      <Button showIcon={false} text='Save' onClick={handlePasswordChange} />
+      <Button
+        isLoading={showButtonLoading}
+        loadingText='Saving...'
+        disabled={showButtonLoading || !oldPassword || !newPassword}
+        showIcon={false}
+        text='Save'
+        onClick={handlePasswordChange}
+      />
     </>
   );
 }

@@ -16,6 +16,7 @@ export default function ChangeDescriptionForm({
   const [newDescription, setNewDescription] = useState(
     oldDescriptionPlaceholder || ''
   );
+  const [showButtonLoading, setShowButtonLoading] = useState<boolean>(false);
 
   const [inputError, setInputError] = useState<string>();
   const [alert, setAlert] = useState<{
@@ -25,12 +26,17 @@ export default function ChangeDescriptionForm({
   }>();
 
   async function handleDescriptionChange() {
+    // Show loading state with button
+    setShowButtonLoading(true);
+
     // Reset error & parse data
     setInputError(undefined);
+
     const parsedData = UserDescription.safeParse(newDescription);
 
     if (parsedData.success === false) {
       setInputError(parsedData.error.format()._errors[0]);
+      setShowButtonLoading(false);
       return;
     }
 
@@ -45,7 +51,9 @@ export default function ChangeDescriptionForm({
     const resBody = await res.json();
 
     if (!res.ok) {
+      setShowButtonLoading(false);
       setAlert({ title: 'Error', message: resBody.message, status: 'error' });
+      return;
     }
 
     setAlert({
@@ -53,6 +61,8 @@ export default function ChangeDescriptionForm({
       message: 'The description was successfully updated.',
       status: 'success',
     });
+
+    setShowButtonLoading(false);
   }
 
   return (
@@ -74,7 +84,16 @@ export default function ChangeDescriptionForm({
         }}
         errorMessage={inputError}
       />
-      <Button showIcon={false} text='Save' onClick={handleDescriptionChange} />
+      <Button
+        isLoading={showButtonLoading}
+        loadingText='Saving...'
+        disabled={
+          showButtonLoading || newDescription === oldDescriptionPlaceholder
+        }
+        showIcon={false}
+        text='Save'
+        onClick={handleDescriptionChange}
+      />
     </>
   );
 }

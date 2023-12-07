@@ -5,7 +5,8 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   color?: 'light' | 'dark';
   disabled?: boolean;
   showIcon: boolean;
-  isLoading: boolean;
+  isLoading?: boolean;
+  loadingText?: string;
 }
 
 export default function Button({
@@ -14,6 +15,7 @@ export default function Button({
   showIcon,
   disabled,
   isLoading,
+  loadingText = 'Loading...',
   ...props
 }: ButtonProps) {
   let backgroundStyling;
@@ -32,7 +34,7 @@ export default function Button({
       {...props}
     >
       <p className='text-small-heading font-bold'>
-        {isLoading ? 'Loading...' : text}
+        {isLoading ? loadingText : text}
       </p>
       {showIcon && <IoArrowForward />}
     </button>
