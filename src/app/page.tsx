@@ -17,9 +17,12 @@ async function getJoinedUserHarvests(userEmail: string) {
           email: userEmail,
         },
       },
-      select: {
-        harvest: true,
-        status: true,
+      include: {
+        harvest: {
+          include: {
+            host: true,
+          },
+        },
       },
     });
 
@@ -32,6 +35,9 @@ async function getHostedHarvests(userEmail: string) {
       host: {
         email: userEmail,
       },
+    },
+    include: {
+      host: true,
     },
   });
 
@@ -54,6 +60,7 @@ export default async function Home() {
   const joinedHarvestsWithParticipationStatus = await getJoinedUserHarvests(
     session.user.email
   );
+
   const joinedHarvestsContent = (
     <>
       <SectionTitle
@@ -70,6 +77,7 @@ export default async function Home() {
           return (
             <HarvestCard
               key={entry.harvest.id}
+              host={entry.harvest.host}
               harvest={entry.harvest}
               participationStatus={entry.status}
               isOwner={false}
@@ -100,7 +108,12 @@ export default async function Home() {
       {hostedHarvests.length > 0 ? (
         hostedHarvests.map((harvest) => {
           return (
-            <HarvestCard key={harvest.id} harvest={harvest} isOwner={true} />
+            <HarvestCard
+              key={harvest.id}
+              host={harvest.host}
+              harvest={harvest}
+              isOwner={true}
+            />
           );
         })
       ) : (
