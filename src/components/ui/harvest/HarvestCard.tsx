@@ -1,17 +1,27 @@
 import Chip from '../display/Chip';
 import Link from 'next/link';
 import StatusIndicator, { IndicatorColor } from '../display/StatusIndicator';
-import { HarvestParticipationStatus, HarvestSchema } from '@/lib/schemas';
+import {
+  HarvestParticipationStatus,
+  PublicUserDataSchema,
+} from '@/lib/schemas';
 import { z } from 'zod';
+import AuthorCard from '../display/AuthorCard';
+import { Harvest } from '@prisma/client';
+import ParticipantsCount from './ParticipantsCount';
 
 type HarvestCardProps = {
-  harvest: z.infer<typeof HarvestSchema>;
+  harvest: Harvest;
+  participantsAmount?: number | string;
+  host: z.infer<typeof PublicUserDataSchema>;
   isOwner?: boolean;
   participationStatus?: z.infer<typeof HarvestParticipationStatus>;
 };
 
 export default function HarvestCard({
   harvest,
+  host,
+  participantsAmount,
   isOwner,
   participationStatus,
 }: HarvestCardProps) {
@@ -54,6 +64,7 @@ export default function HarvestCard({
       <article className='flex flex-col gap-5 justify-evenly bg-background-50 text-text-100 rounded-xl p-5'>
         {statusContent}
         <h3 className='text-small-heading font-bold'>{harvest.title}</h3>
+        <AuthorCard user={host} />
         <div className='flex gap-3'>
           <p>
             {harvest.dateTime.toLocaleDateString() +
@@ -61,6 +72,9 @@ export default function HarvestCard({
               harvest.dateTime.toLocaleTimeString()}
           </p>
         </div>
+        {participantsAmount && participantsAmount !== 0 && (
+          <ParticipantsCount amount={participantsAmount}></ParticipantsCount>
+        )}
         <div>
           <Chip
             text={harvest.location}
