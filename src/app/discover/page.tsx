@@ -1,7 +1,6 @@
 import PageTitle from '@/components/ui/display/PageTitle';
 import { prisma } from '@/lib/prismaClient';
 import HarvestCard from '@/components/ui/harvest/HarvestCard';
-import { getToken } from 'next-auth/jwt';
 import { getServerSession } from 'next-auth';
 import CalloutBox from '@/components/ui/display/CalloutBox';
 
@@ -34,6 +33,9 @@ export default async function DiscoverPage() {
         ],
       },
     },
+    include: {
+      host: true,
+    },
   });
 
   return (
@@ -47,7 +49,13 @@ export default async function DiscoverPage() {
           ></CalloutBox>
         )}
         {harvests.map((harvest) => {
-          return <HarvestCard key={harvest.id} harvest={harvest}></HarvestCard>;
+          return (
+            <HarvestCard
+              key={harvest.id}
+              host={harvest.host}
+              harvest={harvest}
+            ></HarvestCard>
+          );
         })}
       </div>
     </main>
