@@ -17,6 +17,10 @@ export default function ChangePasswordForm() {
   }>();
 
   async function handlePasswordChange() {
+    // Reset alerts
+    setAlert(undefined);
+    setInputError(undefined);
+
     // Validate password
     const parsedData = UserPassword.safeParse(newPassword);
 
