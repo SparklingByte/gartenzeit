@@ -1,5 +1,4 @@
 import PageTitle from '@/components/ui/display/PageTitle';
-import mockHarvest from '@/app/data/harvest.json';
 import HarvestCard from '@/components/ui/harvest/HarvestCard';
 import TopActionMenuBar from '@/components/ui/navigation/TopActionMenuBar';
 import { prisma } from '@/lib/prismaClient';
@@ -19,6 +18,9 @@ export default async function HostedHarvestsPage() {
         email: session.user.email,
       },
     },
+    include: {
+      host: true,
+    },
   });
 
   return (
@@ -32,6 +34,7 @@ export default async function HostedHarvestsPage() {
               key={harvest.id}
               harvest={harvest}
               isOwner={true}
+              host={harvest.host}
             ></HarvestCard>
           );
         })}

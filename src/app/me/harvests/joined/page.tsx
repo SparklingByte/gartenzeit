@@ -1,5 +1,4 @@
 import PageTitle from '@/components/ui/display/PageTitle';
-import mockHarvest from '@/app/data/harvest.json';
 import HarvestCard from '@/components/ui/harvest/HarvestCard';
 import TopActionMenuBar from '@/components/ui/navigation/TopActionMenuBar';
 import { getServerSession } from 'next-auth';
@@ -19,9 +18,12 @@ export default async function JoinedHarvestsPage() {
         email: session.user.email,
       },
     },
-    select: {
-      harvest: true,
-      status: true,
+    include: {
+      harvest: {
+        include: {
+          host: true,
+        },
+      },
     },
   });
 
@@ -37,6 +39,7 @@ export default async function JoinedHarvestsPage() {
               participationStatus={participation.status}
               harvest={participation.harvest}
               isOwner={false}
+              host={participation.harvest.host}
             ></HarvestCard>
           );
         })}
