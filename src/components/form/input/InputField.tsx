@@ -1,7 +1,7 @@
 import { InputHTMLAttributes, TextareaHTMLAttributes } from 'react';
 
 type SingleLineInputProps = {
-  label: string;
+  label?: string;
   multiline?: boolean;
   color: 'base' | 'error' | 'success';
   errorMessage?: string;
@@ -35,19 +35,18 @@ export default function SingleLineInput({
 
   return (
     <div className='grid gap-1'>
-      <label
-        className={`text-small-heading font-bold ${
-          disabled ? 'text-text-50' : 'text-text-100'
-        }`}
-        htmlFor={props.id}
-      >
-        {label} {required && '(Required)'}
-      </label>
-      {errorMessage && !disabled && (
-        <span
-          key={errorMessage}
-          className='text-semantic-warning font-bold'
+      {label && (
+        <label
+          className={`text-small-heading font-bold ${
+            disabled ? 'text-text-50' : 'text-text-100'
+          }`}
+          htmlFor={props.id}
         >
+          {label} {required && '(Required)'}
+        </label>
+      )}
+      {errorMessage && !disabled && (
+        <span key={errorMessage} className='text-semantic-warning font-bold'>
           {errorMessage}
         </span>
       )}
