@@ -29,7 +29,7 @@ async function getLoggedInUser() {
 async function uploadImage(file: File, userId: string) {
   const { data, error } = await supabase.storage
     .from('user_avatars')
-    .upload(userId + new Date().getSeconds, file);
+    .upload(userId + new Date().toISOString(), file);
 
   if (error) {
     throw error;
