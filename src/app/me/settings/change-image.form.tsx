@@ -60,7 +60,6 @@ export default function ChangeImageForm() {
     }
 
     // Show alert
-
     setStatusAlert({
       title: 'Image saved',
       status: 'success',
@@ -68,6 +67,7 @@ export default function ChangeImageForm() {
         'Your image was successfully uploaded and saved. Refresh you profile page to show your new image.',
     });
     setLoading(false);
+    setFile(undefined);
   }
 
   return (
@@ -83,7 +83,9 @@ export default function ChangeImageForm() {
         className='grid gap-5'
         onSubmit={(e) => {
           e.preventDefault();
-          handleImageUpload(e.currentTarget);
+          if (!loading && file) {
+            handleImageUpload(e.currentTarget);
+          }
         }}
       >
         <InputField
