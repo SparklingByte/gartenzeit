@@ -10,6 +10,9 @@ type UserCardProps = {
 };
 
 const PROFILE_PICTURE_SIZE = 40;
+// TODO Replace with global constance
+const SUPABASE_STORAGE_URL =
+  'https://fvmubtpjuonfgmaspyzn.supabase.co/storage/v1/object/public/user_avatars/';
 
 export default function UserCard({ user }: UserCardProps) {
   return (
@@ -19,7 +22,7 @@ export default function UserCard({ user }: UserCardProps) {
           alt={`Profile picture of ${user.username}`}
           width={PROFILE_PICTURE_SIZE}
           height={PROFILE_PICTURE_SIZE}
-          src={user.image || ''} // TODO Replace with placeholder image
+          src={SUPABASE_STORAGE_URL + user.image || ''} // TODO Replace with placeholder image
           className='bg-text-100 rounded-md'
         />
       </Link>
