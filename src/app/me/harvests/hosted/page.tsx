@@ -26,14 +26,14 @@ export default async function HostedHarvestsPage() {
   return (
     <main className='grid gap-6 p-5'>
       <TopActionMenuBar hasBackItem />
-      <PageTitle title='Your created harvests' />
+      <PageTitle title='Your hosted harvests' />
       <div className='grid gap-5'>
         {hostedHarvests.map((harvest) => {
           return (
             <HarvestCard
               key={harvest.id}
               harvest={harvest}
-              isOwner={true}
+              isHost={true}
               host={harvest.host}
             ></HarvestCard>
           );
