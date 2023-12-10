@@ -64,7 +64,7 @@ export default async function Home() {
   const joinedHarvestsContent = (
     <>
       <SectionTitle
-        title='Your joined harvests'
+        title='Harvests you joined'
         linkPathname='/me/harvests/joined'
         linkText={
           joinedHarvestsWithParticipationStatus.length > 0
@@ -80,7 +80,7 @@ export default async function Home() {
               host={entry.harvest.host}
               harvest={entry.harvest}
               participationStatus={entry.status}
-              isOwner={false}
+              isHost={false}
             />
           );
         })
@@ -101,7 +101,7 @@ export default async function Home() {
   const hostedHarvestsContent = (
     <>
       <SectionTitle
-        title='Your hosted harvests'
+        title='Harvests you host'
         linkPathname='/me/harvests/hosted'
         linkText={hostedHarvests.length > 0 ? 'Show all' : undefined}
       />
@@ -109,10 +109,10 @@ export default async function Home() {
         hostedHarvests.map((harvest) => {
           return (
             <HarvestCard
+              harvest={harvest}
               key={harvest.id}
               host={harvest.host}
-              harvest={harvest}
-              isOwner={true}
+              isHost={true}
             />
           );
         })
