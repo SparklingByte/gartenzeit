@@ -7,6 +7,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   showIcon: boolean;
   isLoading?: boolean;
   loadingText?: string;
+  onClick?: () => undefined;
 }
 
 export default function Button({
@@ -16,6 +17,7 @@ export default function Button({
   disabled,
   isLoading,
   loadingText = 'Loading...',
+  onClick,
   ...props
 }: ButtonProps) {
   let backgroundStyling;
@@ -32,6 +34,7 @@ export default function Button({
     <button
       className={`flex items-center gap-3 p-3 rounded-md ${backgroundStyling}`}
       {...props}
+      onClick={disabled ? () => {} : onClick}
     >
       <p className='text-small-heading font-bold'>
         {isLoading ? loadingText : text}
