@@ -14,7 +14,7 @@ type HarvestCardProps = {
   harvest: Harvest;
   participantsAmount?: number | string;
   host: z.infer<typeof PublicUserDataSchema>;
-  isOwner?: boolean;
+  isHost?: boolean;
   participationStatus?: z.infer<typeof HarvestParticipationStatus>;
 };
 
@@ -22,7 +22,7 @@ export default function HarvestCard({
   harvest,
   host,
   participantsAmount,
-  isOwner,
+  isHost,
   participationStatus,
 }: HarvestCardProps) {
   // Map for a color and text for the status indicator
@@ -48,23 +48,21 @@ export default function HarvestCard({
 
   let statusContent;
 
-  if (!isOwner && participationStatus !== undefined) {
+  if (!isHost && participationStatus !== undefined) {
     statusContent = (
       <StatusIndicator
         color={statusMap[participationStatus].color}
         text={statusMap[participationStatus].text}
       />
     );
-  } else if (isOwner) {
-    statusContent = <Chip text='Hosted by you' color='primary' />;
   }
 
   return (
     <Link href={'/harvest/' + harvest.id}>
-      <article className='flex flex-col gap-5 justify-evenly bg-background-50 text-text-100 rounded-xl p-5'>
+      <div className='flex flex-col gap-5 justify-evenly bg-background-50 text-text-100 rounded-xl p-5'>
         {statusContent}
         <h3 className='text-small-heading font-bold'>{harvest.title}</h3>
-        <AuthorCard user={host} />
+        <AuthorCard user={host} isOwnProfile={isHost ? true : false} />
         <div className='flex gap-3'>
           <p>
             {harvest.dateTime.toLocaleDateString() +
@@ -85,7 +83,7 @@ export default function HarvestCard({
         <div>
           <Chip text={harvest.produce}></Chip>
         </div>
-      </article>
+      </div>
     </Link>
   );
 }
