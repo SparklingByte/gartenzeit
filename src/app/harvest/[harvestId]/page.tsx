@@ -8,6 +8,7 @@ import { redirect } from 'next/navigation';
 import { getServerSession } from 'next-auth';
 import HarvestJoinButton from './harvest-join-button';
 import UserCard from '@/components/ui/display/UserCard';
+import Link from 'next/link';
 
 export default async function HarvestPage({
   params,
@@ -72,7 +73,9 @@ export default async function HarvestPage({
       <TopActionMenuBar hasBackItem hasSettingsItem={isHost} />
       <div className='grid gap-5'>
         <PageTitle title={harvest.title} subtitle='Harvest'></PageTitle>
-        <AuthorCard user={harvest.host} />
+        <Link href={'/user/' + harvest.host.username}>
+          <AuthorCard user={harvest.host} isOwnProfile={isHost} />
+        </Link>
       </div>
       <section className='grid gap-5'>
         <SectionTitle title='About the harvest' />
