@@ -2,16 +2,14 @@
 
 ## Next Things To Do
 
-- show right user information on homepage
 - user information on profile page
 - API for editing user information
 - harvest data on harvest page
-- harvest data on homepage
-- harvest data on discover page
 - functionality for uploading user profile image
 
 ## Recently added
 
+- Homepage shows correct harvest and user data
 - Front-End functionality for creating harvests
 - Pages are secured with authentication
 - API to remove participation in harvest with `DELETE` on `/api/harvest/[harvestId]/participants`
