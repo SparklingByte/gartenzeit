@@ -13,6 +13,7 @@ export default function ChangeImageForm() {
     message: string;
   }>();
   const [inputError, setInputError] = useState<string>();
+  const [file, setFile] = useState<File>();
 
   async function handleImageUpload(form: HTMLFormElement) {
     // TODO Replace with global constants
@@ -90,12 +91,21 @@ export default function ChangeImageForm() {
           label='Supported files: JPEG, JPG, PNG. Maximum size: 5 MB.'
           color='base'
           type='file'
+          accept='image/jpeg, image/jpg, image/png'
           errorMessage={inputError}
+          onChange={(e) => {
+            const file = e.target.files[0] as File; // TODO Fix typescript error
+            if (file) {
+              setFile(file);
+            } else {
+              setFile(undefined);
+            }
+          }}
         ></InputField>
         <Button
           isLoading={loading}
           loadingText='Uploading and saving image...'
-          disabled={loading}
+          disabled={loading || !file}
           showIcon={false}
           text='Save new image'
           type='submit'
