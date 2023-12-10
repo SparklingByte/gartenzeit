@@ -1,9 +1,8 @@
-'use client';
-
 import { ReactNode } from 'react';
 import { FaArrowLeftLong } from 'react-icons/fa6';
 import { TbSettingsFilled } from 'react-icons/tb';
 import { PiPencilSimpleFill } from 'react-icons/pi';
+import { Paragraph } from '@/components/typography/Typography';
 
 export type MenuIcon = 'settings' | 'back' | 'edit';
 
@@ -27,15 +26,14 @@ export default function ActionMenuItem({
   };
 
   const iconElement = icon ? (
-    <span className='text-small-heading'>{iconMap[icon]}</span>
+    <span key='icon' className='text-small-heading'>
+      {iconMap[icon]}
+    </span>
   ) : undefined;
-  const textElement = <p>{text}</p>;
+  const textElement = <Paragraph key='text'>{text}</Paragraph>;
 
   return (
-    <div
-      onClick={onOpen}
-      className='flex gap-2 items-center cursor-pointer'
-    >
+    <div onClick={onOpen} className='flex gap-2 items-center cursor-pointer'>
       {iconPosition === 'right'
         ? [textElement, iconElement]
         : [iconElement, textElement]}
