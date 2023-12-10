@@ -38,7 +38,7 @@ export default async function JoinedHarvestsPage() {
               key={participation.harvest.id}
               participationStatus={participation.status}
               harvest={participation.harvest}
-              isOwner={false}
+              isHost={false}
               host={participation.harvest.host}
             ></HarvestCard>
           );
