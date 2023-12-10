@@ -8,6 +8,7 @@ import ChangePasswordForm from './change-password-form';
 import LogoutButton from './logout-button';
 import ChangeDescriptionForm from './change-description-form';
 import { prisma } from '@/lib/prismaClient';
+import ChangeImageForm from './change-image.form';
 
 async function getUserByEmail(email: string) {
   try {
@@ -40,6 +41,10 @@ export default async function ProfileSettingsPage() {
     <main className='grid gap-6 p-5'>
       <TopActionMenuBar hasBackItem />
       <PageTitle title='Account settings' />
+      <section className={SECTION_CLASSNAME}>
+        <SectionTitle title='Change your profile image' />
+        <ChangeImageForm></ChangeImageForm>
+      </section>
       <section className={SECTION_CLASSNAME}>
         <SectionTitle title='Change your details' />
         <ChangeEmailForm
