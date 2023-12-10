@@ -8,6 +8,8 @@ type UserWelcomeCardProps = {
 };
 
 const IMAGE_SIZE = 80;
+const SUPABASE_STORAGE_URL =
+  'https://fvmubtpjuonfgmaspyzn.supabase.co/storage/v1/object/public/user_avatars/';
 
 export default function UserWelcomeCard({
   username,
@@ -21,7 +23,7 @@ export default function UserWelcomeCard({
       </div>
       <Link href={'/me'}>
         <Image
-          src={userProfileImage} // TODO Add fallback profile picture
+          src={SUPABASE_STORAGE_URL + userProfileImage} // TODO Add placeholder profile picture
           width={IMAGE_SIZE}
           height={IMAGE_SIZE}
           alt={`Profile picture from ${username}`}
