@@ -110,18 +110,17 @@ export async function POST(
     }
 
     // Check if user has already joined
-    const existingParticipationId =
-      await prisma.userHarvestParticipations.findFirst({
+    const existingParticipation =
+      await prisma.userHarvestParticipations.findUnique({
         where: {
-          harvestId: params.harvestId,
-          userId: userId,
-        },
-        select: {
-          id: true,
+          userId_harvestId: {
+            harvestId: harvestData.id,
+            userId: userId,
+          },
         },
       });
 
-    if (existingParticipationId) {
+    if (existingParticipation) {
       return NextResponse.json(
         { message: 'You are already participating in this harvest.' },
         { status: 500 }
@@ -131,10 +130,9 @@ export async function POST(
     // Add participation to database
     await prisma.userHarvestParticipations.create({
       data: {
-        id: randomUUID(),
-        harvestId: params.harvestId,
+        harvestId: harvestData.id,
         userId: userId,
-        status: 'PENDING',
+        status: 'CONFIRMED', // TODO Update when participation approval system implemented
       },
     });
   } catch (err) {
@@ -190,19 +188,16 @@ export async function DELETE(
   }
 
   // Get user ID from database
-  let userId;
-  try {
-    const { id } = await prisma.user.findUniqueOrThrow({
-      where: {
-        email: session.user?.email || '',
-      },
-      select: {
-        id: true,
-      },
-    });
+  const user = await prisma.user.findUnique({
+    where: {
+      email: session.user?.email || '',
+    },
+    select: {
+      id: true,
+    },
+  });
 
-    userId = id;
-  } catch {
+  if (!user) {
     return NextResponse.json(
       {
         message:
@@ -212,37 +207,39 @@ export async function DELETE(
     );
   }
 
-  // Remove participation from database
-  try {
-    let participationId;
+  const { id: userId } = user;
 
-    // Get ID of participation (check if user participates)
-    try {
-      const { id } = await prisma.userHarvestParticipations.findFirstOrThrow({
-        where: {
-          userId,
+  // Get ID of participation (check if user participates)
+  const existingParticipation =
+    await prisma.userHarvestParticipations.findUnique({
+      where: {
+        userId_harvestId: {
+          userId: userId,
           harvestId: params.harvestId,
         },
-      });
-      participationId = id;
-    } catch {
-      return NextResponse.json(
-        { message: 'You are not participating in this harvest.' },
-        { status: 500 }
-      );
-    }
-
-    await prisma.userHarvestParticipations.delete({
-      where: {
-        id: participationId,
       },
     });
-  } catch (err) {
+
+  if (!existingParticipation) {
     return NextResponse.json(
-      {
-        message:
-          'An error happend on our side while leaving the harvest. Please try again.',
+      { message: 'You are not participating in this harvest.' },
+      { status: 500 }
+    );
+  }
+
+  // Delete participation from database
+  try {
+    await prisma.userHarvestParticipations.delete({
+      where: {
+        userId_harvestId: {
+          userId: userId,
+          harvestId: params.harvestId,
+        },
       },
+    });
+  } catch {
+    return NextResponse.json(
+      { message: 'An error happened while leaving the harvest.' },
       { status: 500 }
     );
   }
