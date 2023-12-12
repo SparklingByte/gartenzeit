@@ -49,6 +49,9 @@ export default function HarvestCard({
 
   const harvestAlreadyOver = harvest.dateTime.getTime() < new Date().getTime();
 
+  const harvestStartsToday =
+    harvest.dateTime.getDate() === new Date().getDate();
+
   const dateTimeContent =
     harvest.dateTime.toDateString() +
     ' | ' +
@@ -72,15 +75,23 @@ export default function HarvestCard({
         <Heading size='small'>{harvest.title} </Heading>
         <AuthorCard user={host} isOwnProfile={isHost ? true : false} />
         <div className='flex gap-3'>
-          {harvestAlreadyOver ? (
-            <Chip
-              color='red'
-              icon='clock'
-              text={dateTimeContent + ' (Already over)'}
-            />
-          ) : (
-            <Chip color='secondary' text={dateTimeContent} icon='clock'></Chip>
-          )}
+          <Chip
+            icon='clock'
+            color={
+              harvestAlreadyOver
+                ? 'red'
+                : harvestStartsToday
+                ? 'primary'
+                : 'secondary'
+            }
+            text={
+              harvestAlreadyOver
+                ? dateTimeContent + ' (Already over)'
+                : harvestStartsToday
+                ? dateTimeContent + ' (Starts Today)'
+                : dateTimeContent
+            }
+          />
         </div>
         {participantsAmount && participantsAmount !== 0 && (
           <ParticipantsCount amount={participantsAmount}></ParticipantsCount>
