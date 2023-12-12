@@ -86,7 +86,7 @@ export default function HarvestCreateForm() {
       // Redirect user to new created harvest after delay
       setTimeout(() => {
         router.push('/harvest/' + resBody.harvestId);
-      }, 2000);
+      }, 500);
     } else {
       setLoading({ isLoading: false });
       setErrorAlert(resBody.message);
