@@ -9,6 +9,7 @@ import { z } from 'zod';
 import AuthorCard from '../display/AuthorCard';
 import { Harvest } from '@prisma/client';
 import ParticipantsCount from './ParticipantsCount';
+import { Heading, Paragraph } from '@/components/typography/Typography';
 
 type HarvestCardProps = {
   harvest: Harvest;
@@ -59,16 +60,16 @@ export default function HarvestCard({
 
   return (
     <Link href={'/harvest/' + harvest.id}>
-      <div className='flex flex-col gap-5 justify-evenly bg-background-50 text-text-100 rounded-xl p-5'>
+      <div className='flex flex-col p-7 gap-5 justify-evenly bg-background-50 text-text-100 rounded-xl '>
         {statusContent}
-        <h3 className='text-small-heading font-bold'>{harvest.title}</h3>
+        <Heading size='small'>{harvest.title}</Heading>
         <AuthorCard user={host} isOwnProfile={isHost ? true : false} />
         <div className='flex gap-3'>
-          <p>
+          <Paragraph>
             {harvest.dateTime.toDateString() +
               ' | ' +
               harvest.dateTime.toLocaleTimeString()}
-          </p>
+          </Paragraph>
         </div>
         {participantsAmount && participantsAmount !== 0 && (
           <ParticipantsCount amount={participantsAmount}></ParticipantsCount>
