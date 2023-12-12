@@ -10,6 +10,7 @@ import HarvestJoinButton from './harvest-join-button';
 import UserCard from '@/components/ui/display/UserCard';
 import Link from 'next/link';
 import { Paragraph } from '@/components/typography/Typography';
+import StatusIndicator from '@/components/ui/display/StatusIndicator';
 
 export default async function HarvestPage({
   params,
@@ -26,51 +27,60 @@ export default async function HarvestPage({
   }
 
   // Query harvest data from db
-  let harvest;
-  try {
-    harvest = await prisma.harvest.findUniqueOrThrow({
-      where: {
-        id: harvestId,
-      },
-      include: {
-        host: true,
-        participations: {
-          include: {
-            user: true,
-          },
+  const harvest = await prisma.harvest.findUnique({
+    where: {
+      id: harvestId,
+    },
+    include: {
+      host: true,
+      participations: {
+        include: {
+          user: true,
         },
       },
-    });
-  } catch {
+    },
+  });
+
+  if (!harvest) {
     return redirect('/harvest/not-found');
   }
 
-  let user;
+  // Get user from database
+  let user = await prisma.user.findUnique({
+    where: {
+      email: session?.user?.email,
+    },
+  });
 
-  try {
-    user = await prisma.user.findUniqueOrThrow({
-      where: {
-        email: session?.user?.email,
-      },
-    });
-  } catch {
-    console.warn('User data not found. (Harvest page)');
-    return redirect('/');
+  if (!user) {
+    return redirect('/login');
   }
 
   const isHost = harvest.host.email === session.user.email;
-  let userParticipation;
-  let hasJoined: boolean = false;
-
-  if (!isHost) {
-    userParticipation = harvest.participations.find((participation) => {
-      return participation.user.email === session.user?.email;
-    });
-    hasJoined = userParticipation !== undefined;
-  }
 
   const harvestIsAlreadyOver =
     harvest.dateTime.getTime() < new Date().getTime();
+
+  const allConfirmedParticipations = harvest.participations
+    .filter((participation) => {
+      return participation.status === 'CONFIRMED';
+    })
+    .map((participation) => {
+      const { user } = participation;
+      return <UserCard key={user.id} user={user}></UserCard>;
+    });
+
+  // Get participation status of logged in user
+  const userHarvestParticipationStatus = harvest.participations
+    .filter((participation) => {
+      return (
+        participation.userId === user?.id &&
+        participation.harvestId === harvest.id
+      );
+    })
+    .map((participation) => {
+      return { status: participation.status };
+    })[0];
 
   return (
     <main className='p-5 grid gap-10'>
@@ -107,11 +117,8 @@ export default async function HarvestPage({
       </section>
       <section className='grid gap-5'>
         <SectionTitle title='Who is going to come?'></SectionTitle>
-        {harvest.participations.length > 0 ? (
-          harvest.participations.map((participation) => {
-            const { user } = participation;
-            return <UserCard key={user.id} user={user}></UserCard>;
-          })
+        {allConfirmedParticipations.length > 0 ? (
+          allConfirmedParticipations
         ) : (
           <TextCard
             title='No participants'
@@ -125,12 +132,29 @@ export default async function HarvestPage({
             <Paragraph>This harvest is already over</Paragraph>
           </span>
         ) : (
-          <HarvestJoinButton
-            harvestId={harvestId}
-            isHost={isHost}
-            hasJoined={hasJoined}
-            participationStatus={userParticipation?.status}
-          ></HarvestJoinButton>
+          <>
+            {userHarvestParticipationStatus && (
+              <StatusIndicator
+                text={
+                  userHarvestParticipationStatus.status === 'CONFIRMED'
+                    ? 'Your participation was confirmed'
+                    : userHarvestParticipationStatus.status === 'PENDING'
+                    ? 'Your request is pending'
+                    : 'Your request was rejected'
+                }
+                color={
+                  userHarvestParticipationStatus.status === 'CONFIRMED'
+                    ? 'green'
+                    : 'red'
+                }
+              ></StatusIndicator>
+            )}
+            <HarvestJoinButton
+              harvest={harvest}
+              userId={user.id}
+              participation={userHarvestParticipationStatus}
+            ></HarvestJoinButton>
+          </>
         )}
       </section>
     </main>
