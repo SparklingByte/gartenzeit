@@ -1,9 +1,9 @@
 import { ReactNode } from 'react';
-import { FaLocationDot } from 'react-icons/fa6';
+import { FaAppleWhole, FaLocationDot } from 'react-icons/fa6';
 import { TbCheck } from 'react-icons/tb';
 import { LuClock } from 'react-icons/lu';
 
-type ChipIcon = 'location' | 'check' | 'clock';
+type ChipIcon = 'location' | 'check' | 'clock' | 'apple';
 interface ChipProps {
   text: string;
   color?: 'primary' | 'secondary';
@@ -31,6 +31,7 @@ export default function Chip({ text, color, icon, onClick }: ChipProps) {
     location: <FaLocationDot className={colorMap[color].icon} />,
     check: <TbCheck className={colorMap[color].icon} />,
     clock: <LuClock className={colorMap[color].icon} />,
+    apple: <FaAppleWhole className={colorMap[color].icon} />,
   };
 
   return (
