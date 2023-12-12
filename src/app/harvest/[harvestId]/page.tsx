@@ -11,6 +11,7 @@ import UserCard from '@/components/ui/display/UserCard';
 import Link from 'next/link';
 import { Paragraph } from '@/components/typography/Typography';
 import StatusIndicator from '@/components/ui/display/StatusIndicator';
+import AlertBox from '@/components/ui/display/AlertBox';
 
 export default async function HarvestPage({
   params,
@@ -85,8 +86,20 @@ export default async function HarvestPage({
   return (
     <main className='p-5 grid gap-10'>
       <TopActionMenuBar hasBackItem hasSettingsItem={isHost} />
+      {harvestIsAlreadyOver && (
+        <AlertBox
+          title='Harvest already over'
+          message={
+            'This harvest is already over.' +
+            (isHost
+              ? ' You can now delete this harvest if you want.'
+              : 'Checkout the discovery page for more harvests to join.')
+          }
+          status='warning'
+        ></AlertBox>
+      )}
       <div className='grid gap-5'>
-        <PageTitle title={harvest.title} subtitle='Harvest'></PageTitle>
+        <PageTitle title={harvest.title} subtitle={'Harvest'}></PageTitle>
         <Link href={'/user/' + harvest.host.username}>
           <AuthorCard user={harvest.host} isOwnProfile={isHost} />
         </Link>
