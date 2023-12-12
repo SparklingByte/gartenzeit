@@ -47,9 +47,16 @@ export default function HarvestCard({
     },
   };
 
+  const harvestAlreadyOver = harvest.dateTime.getTime() < new Date().getTime();
+
+  const dateTimeContent =
+    harvest.dateTime.toDateString() +
+    ' | ' +
+    harvest.dateTime.toLocaleTimeString();
+
   let statusContent;
 
-  if (!isHost && participationStatus !== undefined) {
+  if (!isHost && participationStatus !== undefined && !harvestAlreadyOver) {
     statusContent = (
       <StatusIndicator
         color={statusMap[participationStatus].color}
@@ -62,14 +69,18 @@ export default function HarvestCard({
     <Link href={'/harvest/' + harvest.id}>
       <div className='flex flex-col p-7 gap-5 justify-evenly bg-background-50 text-text-100 rounded-xl '>
         {statusContent}
-        <Heading size='small'>{harvest.title}</Heading>
+        <Heading size='small'>{harvest.title} </Heading>
         <AuthorCard user={host} isOwnProfile={isHost ? true : false} />
         <div className='flex gap-3'>
-          <Paragraph>
-            {harvest.dateTime.toDateString() +
-              ' | ' +
-              harvest.dateTime.toLocaleTimeString()}
-          </Paragraph>
+          {harvestAlreadyOver ? (
+            <Chip
+              color='red'
+              icon='clock'
+              text={dateTimeContent + ' (Already over)'}
+            />
+          ) : (
+            <Chip color='secondary' text={dateTimeContent} icon='clock'></Chip>
+          )}
         </div>
         {participantsAmount && participantsAmount !== 0 && (
           <ParticipantsCount amount={participantsAmount}></ParticipantsCount>
