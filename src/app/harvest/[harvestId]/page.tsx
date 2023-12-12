@@ -9,6 +9,7 @@ import { getServerSession } from 'next-auth';
 import HarvestJoinButton from './harvest-join-button';
 import UserCard from '@/components/ui/display/UserCard';
 import Link from 'next/link';
+import { Paragraph } from '@/components/typography/Typography';
 
 export default async function HarvestPage({
   params,
@@ -68,6 +69,9 @@ export default async function HarvestPage({
     hasJoined = userParticipation !== undefined;
   }
 
+  const harvestIsAlreadyOver =
+    harvest.dateTime.getTime() < new Date().getTime();
+
   return (
     <main className='p-5 grid gap-10'>
       <TopActionMenuBar hasBackItem hasSettingsItem={isHost} />
@@ -116,12 +120,18 @@ export default async function HarvestPage({
         )}
       </section>
       <section className='grid p-5 bg-background-50 rounded-xl'>
-        <HarvestJoinButton
-          harvestId={harvestId}
-          isHost={isHost}
-          hasJoined={hasJoined}
-          participationStatus={userParticipation?.status}
-        ></HarvestJoinButton>
+        {harvestIsAlreadyOver ? (
+          <span className='text-center'>
+            <Paragraph>This harvest is already over</Paragraph>
+          </span>
+        ) : (
+          <HarvestJoinButton
+            harvestId={harvestId}
+            isHost={isHost}
+            hasJoined={hasJoined}
+            participationStatus={userParticipation?.status}
+          ></HarvestJoinButton>
+        )}
       </section>
     </main>
   );
