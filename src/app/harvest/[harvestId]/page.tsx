@@ -101,10 +101,7 @@ export default async function HarvestPage({
         <TextCard title="What's harvested?" text={harvest.produce}></TextCard>
       </section>
       <section className='grid gap-5'>
-        <SectionTitle
-          title='When and where?'
-          helperText="You'll see the full location once your participation was confirmed."
-        ></SectionTitle>
+        <SectionTitle title='When and where?'></SectionTitle>
         <TextCard title='Location' text={harvest.location}></TextCard>
         <TextCard
           title='Time and date'
@@ -126,13 +123,13 @@ export default async function HarvestPage({
           ></TextCard>
         )}
       </section>
-      <section className='grid p-5 bg-background-50 rounded-xl'>
+      <section className='p-5 bg-background-50 rounded-xl'>
         {harvestIsAlreadyOver ? (
           <span className='text-center'>
             <Paragraph>This harvest is already over</Paragraph>
           </span>
         ) : (
-          <>
+          <div className='grid flex-col align-center w-100 gap-5'>
             {userHarvestParticipationStatus && (
               <StatusIndicator
                 text={
@@ -154,7 +151,7 @@ export default async function HarvestPage({
               userId={user.id}
               participation={userHarvestParticipationStatus}
             ></HarvestJoinButton>
-          </>
+          </div>
         )}
       </section>
     </main>

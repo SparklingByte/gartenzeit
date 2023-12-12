@@ -97,7 +97,7 @@ export default function HarvestJoinButton({
       : 'Join this harvest';
 
   return (
-    <div className='flex'>
+    <div className='grid'>
       {alert && (
         <AlertBox
           title={alert.title}
