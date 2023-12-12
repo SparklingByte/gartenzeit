@@ -6,7 +6,7 @@ import { LuClock } from 'react-icons/lu';
 type ChipIcon = 'location' | 'check' | 'clock' | 'apple';
 interface ChipProps {
   text: string;
-  color?: 'primary' | 'secondary';
+  color: 'primary' | 'secondary' | 'red';
   icon?: ChipIcon;
   onClick?: () => {};
 }
@@ -14,7 +14,13 @@ interface ChipProps {
 export default function Chip({ text, color, icon, onClick }: ChipProps) {
   if (!color) color = 'primary';
 
-  const colorMap = {
+  const colorMap: {
+    [key in ChipProps['color']]: {
+      background: string;
+      text: string;
+      icon: string;
+    };
+  } = {
     primary: {
       background: 'bg-primary-100',
       text: 'text-text-100',
@@ -24,6 +30,11 @@ export default function Chip({ text, color, icon, onClick }: ChipProps) {
       background: 'bg-background-80',
       text: 'text-text-100',
       icon: 'text-primary-120',
+    },
+    red: {
+      background: 'bg-semantic-warning',
+      text: 'text-background-50',
+      icon: 'text-background-50',
     },
   };
 
