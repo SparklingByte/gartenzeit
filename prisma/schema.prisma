@@ -67,12 +67,13 @@ model Harvest {
 }
 
 model UserHarvestParticipations {
-  id        String                         @id @default(uuid())
   user      User                           @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   harvest   Harvest                        @relation(fields: [harvestId], references: [id], onDelete: Cascade)
   harvestId String
   status    UserHarvestParticipationStatus @default(CONFIRMED)
+
+  @@id([userId, harvestId])
 }
 
 enum UserHarvestParticipationStatus {
