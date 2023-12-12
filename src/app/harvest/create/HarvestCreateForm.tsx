@@ -119,6 +119,7 @@ export default function HarvestCreateForm() {
         id='title'
         color='base'
         label='Title of the harvest'
+        placeholder='E.g. Looking for helpers for harvesting big tomatoes'
         errorMessage={inputErrors?.title}
       />
       <InputField
@@ -127,6 +128,7 @@ export default function HarvestCreateForm() {
         multiline
         color='base'
         label='Description'
+        placeholder='E.g. Hi there! I am looking for 3 to 4 helpers who want to support me with harvesting my tomatoes. I will provide everything you need like tools. Feel free to bring your kids :)'
         errorMessage={inputErrors?.description}
       />
       <InputField
@@ -134,6 +136,7 @@ export default function HarvestCreateForm() {
         id='reward'
         color='base'
         label='Whats the reward'
+        placeholder='E.g. You can have 10 tomatoes.'
         errorMessage={inputErrors?.reward}
       />
       <InputField
@@ -141,6 +144,7 @@ export default function HarvestCreateForm() {
         id='produce'
         color='base'
         label='What do you want to harvest'
+        placeholder='E.g. Tomatoes'
         errorMessage={inputErrors?.produce}
       />
       <InputField
@@ -148,6 +152,7 @@ export default function HarvestCreateForm() {
         id='location'
         color='base'
         label='Location of your garden'
+        placeholder='E.g. Little Garden Street 123, Gardentown'
         errorMessage={inputErrors?.location}
       />
       <InputField
