@@ -15,27 +15,19 @@ export default async function HarvestSettingsPage({
 }) {
   const { harvestId } = params;
   const session = await getServerSession();
-  let harvest;
 
-  try {
-    harvest = await prisma.harvest.findUniqueOrThrow({
-      where: {
-        id: harvestId,
-      },
-      include: {
-        participations: {
-          include: {
-            user: true,
-          },
-        },
-        host: true,
-      },
-    });
-  } catch {
+  const harvest = await prisma.harvest.findUnique({
+    where: {
+      id: harvestId,
+    },
+    include: {
+      host: true,
+    },
+  });
+
+  if (!harvest) {
     return redirect('/harvest/not-found');
   }
-
-  const participations = harvest.participations;
 
   // Check if user is harvest owner
   if (harvest.host.email !== session?.user?.email) {
@@ -54,18 +46,6 @@ export default async function HarvestSettingsPage({
   return (
     <main className='grid gap-6 p-5'>
       <TopActionMenuBar hasBackItem />
-      <section className='grid gap-5'>
-        <SectionTitle
-          title='Participants'
-          helperText='Check who is going to join your harvest'
-        />
-        {participations.length < 1 && (
-          <Paragraph>There are no participants yet.</Paragraph>
-        )}
-        {participations.map(({ user }) => {
-          return <UserCard key={user.id} user={user} />;
-        })}
-      </section>
       <section className='grid gap-5'>
         <SectionTitle title='Manage the harvest'></SectionTitle>
         <DeleteHarvestButton harvestId={harvest.id}></DeleteHarvestButton>
