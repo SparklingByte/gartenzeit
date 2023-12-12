@@ -65,7 +65,7 @@ export default function HarvestCard({
         <AuthorCard user={host} isOwnProfile={isHost ? true : false} />
         <div className='flex gap-3'>
           <p>
-            {harvest.dateTime.toLocaleDateString() +
+            {harvest.dateTime.toDateString() +
               ' | ' +
               harvest.dateTime.toLocaleTimeString()}
           </p>
@@ -73,15 +73,13 @@ export default function HarvestCard({
         {participantsAmount && participantsAmount !== 0 && (
           <ParticipantsCount amount={participantsAmount}></ParticipantsCount>
         )}
-        <div>
+        <div className='flex gap-3 flex-wrap'>
           <Chip
             text={harvest.location}
             color={'secondary'}
             icon={'location'}
           ></Chip>
-        </div>
-        <div>
-          <Chip text={harvest.produce}></Chip>
+          <Chip icon='apple' text={harvest.produce} color='secondary'></Chip>
         </div>
       </div>
     </Link>
