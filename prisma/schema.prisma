@@ -50,7 +50,7 @@ model User {
   accounts           Account[]
   sessions           Session[]
   hostedHarvests     Harvest[]
-  harvestParticipations     UserHarvestParticipations[]
+  harvestParticipations     UserHarvestParticipation[]
 }
 
 model Harvest {
@@ -63,10 +63,10 @@ model Harvest {
   dateTime     DateTime
   host         User                        @relation(fields: [hostUserId], references: [id], onDelete: Cascade)
   hostUserId   String
-  participations UserHarvestParticipations[]
+  participations UserHarvestParticipation[]
 }
 
-model UserHarvestParticipations {
+model UserHarvestParticipation {
   user      User                           @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   harvest   Harvest                        @relation(fields: [harvestId], references: [id], onDelete: Cascade)
