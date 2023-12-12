@@ -98,7 +98,10 @@ export default function HarvestCreateForm() {
       className='grid gap-5'
       onSubmit={(e) => {
         e.preventDefault();
-        handleHarvestCreation(e.currentTarget);
+
+        if (!loading.isLoading) {
+          handleHarvestCreation(e.currentTarget);
+        }
       }}
     >
       {errorAlert && (
