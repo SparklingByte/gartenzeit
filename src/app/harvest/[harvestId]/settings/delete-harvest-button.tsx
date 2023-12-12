@@ -36,12 +36,11 @@ export default function DeleteHarvestButton({
 
     setShowSuccessAlert(true);
 
-    // Redirect user after 2 seconds
     setLoading({ isLoading: true, text: 'Redirecting to homepage...' });
 
     setTimeout(() => {
       router.replace('/');
-    }, 2000);
+    }, 500);
   }
 
   return (
