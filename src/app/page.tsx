@@ -67,23 +67,27 @@ export default async function Home() {
         title='Harvests you joined'
         linkPathname='/me/harvests/joined'
         linkText={
-          joinedHarvestsWithParticipationStatus.length > 0
+          joinedHarvestsWithParticipationStatus.length > 3
             ? 'Show all'
             : undefined
         }
       />
       {joinedHarvestsWithParticipationStatus.length > 0 ? (
-        joinedHarvestsWithParticipationStatus.map((entry) => {
-          return (
-            <HarvestCard
-              key={entry.harvest.id}
-              host={entry.harvest.host}
-              harvest={entry.harvest}
-              participationStatus={entry.status}
-              isHost={false}
-            />
-          );
-        })
+        joinedHarvestsWithParticipationStatus
+          .filter((_, index) => {
+            return index < 3;
+          })
+          .map((entry) => {
+            return (
+              <HarvestCard
+                key={entry.harvest.id}
+                host={entry.harvest.host}
+                harvest={entry.harvest}
+                participationStatus={entry.status}
+                isHost={false}
+              />
+            );
+          })
       ) : (
         <CalloutBox
           title='No harvests to display'
@@ -103,19 +107,23 @@ export default async function Home() {
       <SectionTitle
         title='Harvests you host'
         linkPathname='/me/harvests/hosted'
-        linkText={hostedHarvests.length > 0 ? 'Show all' : undefined}
+        linkText={hostedHarvests.length > 3 ? 'Show all' : undefined}
       />
       {hostedHarvests.length > 0 ? (
-        hostedHarvests.map((harvest) => {
-          return (
-            <HarvestCard
-              harvest={harvest}
-              key={harvest.id}
-              host={harvest.host}
-              isHost={true}
-            />
-          );
-        })
+        hostedHarvests
+          .filter((_, index) => {
+            return index < 3;
+          })
+          .map((harvest) => {
+            return (
+              <HarvestCard
+                harvest={harvest}
+                key={harvest.id}
+                host={harvest.host}
+                isHost={true}
+              />
+            );
+          })
       ) : (
         <CalloutBox
           title='No harvests to display'
