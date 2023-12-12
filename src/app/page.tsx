@@ -11,7 +11,7 @@ import Link from 'next/link';
 async function getJoinedUserHarvests(userEmail: string) {
   // Query harvest data and status of participation of user (is not equal to harvest!)
   const harvestsWithParticipationStatus =
-    await prisma.userHarvestParticipations.findMany({
+    await prisma.userHarvestParticipation.findMany({
       where: {
         user: {
           email: userEmail,
