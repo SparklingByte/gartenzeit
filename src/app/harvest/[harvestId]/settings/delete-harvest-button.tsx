@@ -45,7 +45,7 @@ export default function DeleteHarvestButton({
   }
 
   return (
-    <div>
+    <div className='grid'>
       {showSuccessAlert && (
         <AlertBox
           status='success'
