@@ -18,7 +18,7 @@ export default function RootLayout({
     <html lang='en'>
       <body className='bg-background-80 pb-40'>
         <NextAuthProvider>{children}</NextAuthProvider>
-        <div className='flex justify-center fixed bottom-5 w-screen'>
+        <div className='bg-gradient-to-t from-background-100 from-50% to-transparent  p-5 pt-10 justify-center fixed bottom-0 w-full'>
           <NavigationBar />
         </div>
       </body>
