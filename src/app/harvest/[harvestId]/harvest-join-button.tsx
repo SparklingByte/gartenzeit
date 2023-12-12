@@ -7,6 +7,7 @@ import { HarvestTitle } from '@/lib/schemas';
 import StatusIndicator from '@/components/ui/display/StatusIndicator';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import AlertBox from '@/components/ui/display/AlertBox';
 
 type HarvestJoinButtonProps = {
   harvestId: z.infer<typeof HarvestTitle>;
@@ -26,6 +27,11 @@ export default function HarvestJoinButton({
     isLoading: false,
     text: 'Loading...',
   });
+  const [alert, setAlert] = useState<{
+    title: string;
+    message: string;
+    status: 'success' | 'error';
+  }>();
 
   let buttonText;
   let isDisabled;
@@ -42,7 +48,7 @@ export default function HarvestJoinButton({
       setLoading({ isLoading: false, text: 'Joining harvest...' });
       return router.refresh();
     } else {
-      console.error(resData.message);
+      setAlert({ title: 'Error', message: resData.message, status: 'error' });
       setLoading({ isLoading: false, text: 'Joining harvest...' });
     }
   }
@@ -60,7 +66,7 @@ export default function HarvestJoinButton({
       setLoading({ isLoading: false, text: 'Leaving harvest...' });
       return router.refresh();
     } else {
-      console.error(resData.message);
+      setAlert({ title: 'Error', message: resData.message, status: 'error' });
       setLoading({ isLoading: false, text: 'Leaving harvest...' });
     }
   }
@@ -105,6 +111,13 @@ export default function HarvestJoinButton({
           color={participationStatus === 'CONFIRMED' ? 'green' : 'red'}
         ></StatusIndicator>
       )}
+      {alert && (
+        <AlertBox
+          title={alert.title}
+          message={alert.message}
+          status={alert.status}
+        ></AlertBox>
+      )}
       <Button
         isLoading={loading.isLoading}
         loadingText={loading.text}
@@ -112,15 +125,13 @@ export default function HarvestJoinButton({
         disabled={isDisabled || loading.isLoading}
         showIcon={true}
         onClick={() => {
+          setAlert(undefined);
+
           if (!hasJoined) {
-            handleJoinHarvest().then(() => {
-              console.log('Join Function Done');
-            });
+            handleJoinHarvest();
           }
           if (hasJoined && participationStatus !== 'REJECTED') {
-            handleLeaveHarvest().then(() => {
-              console.log('Leave function done.');
-            });
+            handleLeaveHarvest();
           }
         }}
       ></Button>
