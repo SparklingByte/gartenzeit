@@ -24,7 +24,7 @@ export async function GET(
   let harvestParticipants;
 
   try {
-    harvestParticipants = await prisma.userHarvestParticipations.findMany({
+    harvestParticipants = await prisma.userHarvestParticipation.findMany({
       where: {
         harvestId: params.harvestId,
       },
@@ -111,7 +111,7 @@ export async function POST(
 
     // Check if user has already joined
     const existingParticipation =
-      await prisma.userHarvestParticipations.findUnique({
+      await prisma.userHarvestParticipation.findUnique({
         where: {
           userId_harvestId: {
             harvestId: harvestData.id,
@@ -128,7 +128,7 @@ export async function POST(
     }
 
     // Add participation to database
-    await prisma.userHarvestParticipations.create({
+    await prisma.userHarvestParticipation.create({
       data: {
         harvestId: harvestData.id,
         userId: userId,
@@ -211,7 +211,7 @@ export async function DELETE(
 
   // Get ID of participation (check if user participates)
   const existingParticipation =
-    await prisma.userHarvestParticipations.findUnique({
+    await prisma.userHarvestParticipation.findUnique({
       where: {
         userId_harvestId: {
           userId: userId,
@@ -229,7 +229,7 @@ export async function DELETE(
 
   // Delete participation from database
   try {
-    await prisma.userHarvestParticipations.delete({
+    await prisma.userHarvestParticipation.delete({
       where: {
         userId_harvestId: {
           userId: userId,
