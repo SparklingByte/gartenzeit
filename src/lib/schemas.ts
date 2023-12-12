@@ -40,10 +40,12 @@ export const UserImage = z.string().url();
 export const HarvestId = z
   .string()
   .uuid('The id of the harvest has to be a valid UUID');
+
 export const HarvestTitle = z
   .string()
   .min(5, 'The title must contain at least 5 characters.')
-  .max(20, 'The length of the title must not exceed 20 characters.');
+  .max(40, 'The length of the title must not exceed 40 characters.');
+
 export const HarvestDescription = z
   .string()
   .min(10, 'The description must contain at least 10 characters.')
