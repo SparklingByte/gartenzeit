@@ -2,43 +2,59 @@
 
 import Button from '@/components/buttons/Button';
 import { z } from 'zod';
-import { UserHarvestParticipationStatus } from '@prisma/client';
-import { HarvestTitle } from '@/lib/schemas';
-import StatusIndicator from '@/components/ui/display/StatusIndicator';
-import { useRouter } from 'next/navigation';
+import { HarvestSchema, UserId } from '@/lib/schemas';
 import { useState } from 'react';
 import AlertBox from '@/components/ui/display/AlertBox';
+import { UserHarvestParticipationStatus } from '@prisma/client';
+import { useRouter } from 'next/navigation';
 
 type HarvestJoinButtonProps = {
-  harvestId: z.infer<typeof HarvestTitle>;
-  isHost: boolean;
-  hasJoined: boolean;
-  participationStatus?: UserHarvestParticipationStatus;
+  harvest: z.infer<typeof HarvestSchema>;
+  userId: z.infer<typeof UserId>;
+  participation: { status: UserHarvestParticipationStatus };
 };
 
 export default function HarvestJoinButton({
-  harvestId,
-  isHost,
-  hasJoined,
-  participationStatus,
+  harvest,
+  userId,
+  participation,
 }: HarvestJoinButtonProps) {
   const router = useRouter();
   const [loading, setLoading] = useState<{ isLoading: boolean; text: string }>({
     isLoading: false,
     text: 'Loading...',
   });
+
   const [alert, setAlert] = useState<{
     title: string;
     message: string;
     status: 'success' | 'error';
   }>();
 
-  let buttonText;
-  let isDisabled;
+  const isHost = harvest.hostUserId === userId;
+
+  async function getUserParticipation() {
+    const res = await fetch(`/api/harvests/${harvest.id}/participations`, {
+      method: 'GET',
+    });
+
+    const resBody: {
+      userId: string;
+      status: UserHarvestParticipationStatus;
+    }[] = await res.json();
+
+    const participation = resBody.filter((participation) => {
+      return participation.userId === userId;
+    })[0];
+
+    console.log(participation);
+
+    return participation;
+  }
 
   async function handleJoinHarvest() {
     setLoading({ isLoading: true, text: 'Joining harvest...' });
-    const res = await fetch(`/api/harvests/${harvestId}/participants`, {
+    const res = await fetch(`/api/harvests/${harvest.id}/participations`, {
       method: 'POST',
     });
     const resData = await res.json();
@@ -56,7 +72,7 @@ export default function HarvestJoinButton({
   async function handleLeaveHarvest() {
     setLoading({ isLoading: true, text: 'Leaving harvest...' });
 
-    const res = await fetch(`/api/harvests/${harvestId}/participants`, {
+    const res = await fetch(`/api/harvests/${harvest.id}/participations`, {
       method: 'DELETE',
     });
     const resData = await res.json();
@@ -71,46 +87,17 @@ export default function HarvestJoinButton({
     }
   }
 
-  if (isHost) {
-    buttonText = 'Cannot join your own harvest';
-    isDisabled = true;
-  } else if (!hasJoined) {
-    buttonText = 'Join the harvest';
-    isDisabled = false;
-  } else if (participationStatus) {
-    const map = {
-      CONFIRMED: {
-        text: 'Leave the harvest',
-        isDisabled: false,
-      },
-      PENDING: {
-        text: 'Cancel your request',
-        isDisabled: false,
-      },
-      REJECTED: {
-        text: 'Cannot join the harvest',
-        isDisabled: true,
-      },
-    };
-
-    buttonText = map[participationStatus].text;
-    isDisabled = map[participationStatus].isDisabled;
-  }
+  const text =
+    participation?.status === 'CONFIRMED' || participation?.status === 'PENDING'
+      ? 'Leave the harvest'
+      : participation?.status === 'REJECTED'
+      ? 'Cannot join this harvest'
+      : isHost
+      ? 'Cannot join your own harvest'
+      : 'Join this harvest';
 
   return (
     <div className='flex'>
-      {hasJoined && (
-        <StatusIndicator
-          text={
-            participationStatus === 'CONFIRMED'
-              ? 'Your participation was confirmed'
-              : participationStatus === 'PENDING'
-              ? 'Your request is pending'
-              : 'Your request was rejected'
-          }
-          color={participationStatus === 'CONFIRMED' ? 'green' : 'red'}
-        ></StatusIndicator>
-      )}
       {alert && (
         <AlertBox
           title={alert.title}
@@ -121,17 +108,24 @@ export default function HarvestJoinButton({
       <Button
         isLoading={loading.isLoading}
         loadingText={loading.text}
-        text={buttonText || '⚠️ ERROR'}
-        disabled={isDisabled || loading.isLoading}
+        text={text || 'Join'}
+        disabled={
+          participation?.status === 'REJECTED' ||
+          harvest.hostUserId === userId ||
+          loading.isLoading
+        }
         showIcon={true}
         onClick={() => {
           setAlert(undefined);
 
-          if (!hasJoined) {
+          if (!participation?.status) {
             handleJoinHarvest();
+            return;
           }
-          if (hasJoined && participationStatus !== 'REJECTED') {
+
+          if (participation?.status !== 'REJECTED') {
             handleLeaveHarvest();
+            return;
           }
         }}
       ></Button>
