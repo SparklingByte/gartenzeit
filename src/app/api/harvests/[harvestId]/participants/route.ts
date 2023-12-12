@@ -129,10 +129,13 @@ export async function POST(
       },
     });
   } catch (err) {
-    return NextResponse.json({ message: `Error → ${err}` }, { status: 500 });
+    return NextResponse.json({ message: err }, { status: 500 });
   }
 
-  return NextResponse.json({ message: 'Participation added' }, { status: 200 });
+  return NextResponse.json(
+    { message: 'You successfully joined the harvest' },
+    { status: 200 }
+  );
 }
 
 //* Removing a user from the list of participants
@@ -189,7 +192,10 @@ export async function DELETE(
     userId = id;
   } catch {
     return NextResponse.json(
-      { message: 'Error while getting user ID' },
+      {
+        message:
+          'And error happened with connecting to your account. Please try again. If you still have the problem, try to login again.',
+      },
       { status: 500 }
     );
   }
@@ -209,7 +215,7 @@ export async function DELETE(
       participationId = id;
     } catch {
       return NextResponse.json(
-        { message: 'You are not participating in this harvest' },
+        { message: 'You are not participating in this harvest.' },
         { status: 500 }
       );
     }
@@ -223,14 +229,15 @@ export async function DELETE(
     console.log(err);
     return NextResponse.json(
       {
-        message: 'Error while deleting participation',
+        message:
+          'An error happend on our side while leaving the harvest. Please try again.',
       },
       { status: 500 }
     );
   }
 
   return NextResponse.json(
-    { message: 'Participation removed' },
+    { message: 'You left the harvest.' },
     { status: 200 }
   );
 }
