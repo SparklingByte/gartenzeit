@@ -172,21 +172,6 @@ export async function DELETE(
     );
   }
 
-  // Delete harvest from participants list
-  try {
-    await prisma.userHarvestParticipations.deleteMany({
-      where: {
-        harvestId: params.harvestId,
-      },
-    });
-  } catch (err) {
-    console.log(err);
-    return NextResponse.json(
-      { message: 'Error while deleting harvest from participants list' },
-      { status: 500 }
-    );
-  }
-
   return NextResponse.json(
     { message: 'Harvest deleted successfully' },
     { status: 200 }
