@@ -96,11 +96,17 @@ export async function POST(
     });
 
     if (userId === harvestData.hostUserId) {
-      throw new Error('You cannot join your own harvest');
+      return NextResponse.json(
+        { message: 'You cannot join your own harvest.' },
+        { status: 400 }
+      );
     }
 
     if (harvestData.dateTime.getTime() < new Date().getTime()) {
-      throw new Error('Cannot join a harvest that is already over');
+      return NextResponse.json(
+        { message: 'You cannot join a harvest that is already over.' },
+        { status: 400 }
+      );
     }
 
     // Check if user has already joined
@@ -116,7 +122,10 @@ export async function POST(
       });
 
     if (existingParticipationId) {
-      throw new Error('You have already joined this harvest');
+      return NextResponse.json(
+        { message: 'You are already participating in this harvest.' },
+        { status: 500 }
+      );
     }
 
     // Add participation to database
@@ -129,7 +138,10 @@ export async function POST(
       },
     });
   } catch (err) {
-    return NextResponse.json({ message: err }, { status: 500 });
+    return NextResponse.json(
+      { message: 'An error happened while updating your participation.' },
+      { status: 500 }
+    );
   }
 
   return NextResponse.json(
@@ -226,7 +238,6 @@ export async function DELETE(
       },
     });
   } catch (err) {
-    console.log(err);
     return NextResponse.json(
       {
         message:
