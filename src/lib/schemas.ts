@@ -63,7 +63,6 @@ export const HarvestLocation = z
   .string()
   .min(5, 'The location has to contain at least 5 characters.');
 
-//! Check if it causes any API problems (especially for creating harvests)
 export const HarvestDateTime = z.date();
 
 export const HarvestParticipationStatus = z.enum([
@@ -91,7 +90,10 @@ export const HarvestCreationSchema = z.object({
   reward: HarvestReward,
   produce: HarvestProduce,
   location: HarvestLocation,
-  dateTime: HarvestDateTime,
+  dateTime: HarvestDateTime.min(
+    new Date(),
+    'You cannot host a harvest in the past.'
+  ),
 });
 
 export const HarvestParticipantsSchema = z
