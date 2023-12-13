@@ -26,7 +26,7 @@ async function getUserByEmail(email: string) {
 export default async function ProfileSettingsPage() {
   const session = await getServerSession();
 
-  const SECTION_CLASSNAME = 'grid gap-5';
+  const SECTION_CLASSNAME = 'grid gap-5 p-5 bg-background-100 rounded-xl';
 
   if (!session) {
     return redirect('/login');
@@ -38,9 +38,11 @@ export default async function ProfileSettingsPage() {
   }
 
   return (
-    <main className='grid gap-6 p-5'>
-      <TopActionMenuBar hasBackItem />
-      <PageTitle title='Account settings' />
+    <main className='grid gap-10 p-5'>
+      <div className='grid gap-5'>
+        <TopActionMenuBar hasBackItem />
+        <PageTitle title='Account settings' />
+      </div>
       <section className={SECTION_CLASSNAME}>
         <SectionTitle title='Change your profile image' />
         <ChangeImageForm></ChangeImageForm>
