@@ -18,7 +18,11 @@ export default function AuthorCard({ user, isOwnProfile }: AuthorCardProps) {
   return (
     <div className='flex gap-3 items-center'>
       <Image
-        src={SUPABASE_STORAGE_URL + user.image || ''} // TODO Replace with placeholder image
+        src={
+          user.image
+            ? SUPABASE_STORAGE_URL + user.image
+            : '/placeholder-image.jpg'
+        }
         alt={`Profile picture of ${user.username}`}
         width={IMAGE_SIZE}
         height={IMAGE_SIZE}

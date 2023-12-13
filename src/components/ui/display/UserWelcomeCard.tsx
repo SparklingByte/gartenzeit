@@ -23,7 +23,11 @@ export default function UserWelcomeCard({
       </div>
       <Link href={'/me'}>
         <Image
-          src={SUPABASE_STORAGE_URL + userProfileImage} // TODO Add placeholder profile picture
+          src={
+            userProfileImage
+              ? SUPABASE_STORAGE_URL + userProfileImage
+              : '/placeholder-image.jpg'
+          }
           width={IMAGE_SIZE}
           height={IMAGE_SIZE}
           alt={`Profile picture from ${username}`}

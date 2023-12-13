@@ -20,7 +20,11 @@ export default function UserCard({ user }: UserCardProps) {
           alt={`Profile picture of ${user.username}`}
           width={40}
           height={40}
-          src={`${SUPABASE_STORAGE_URL}/${user.image}` || ''} // TODO Replace with placeholder image
+          src={
+            user.image
+              ? SUPABASE_STORAGE_URL + user.image
+              : '/placeholder-image.jpg'
+          }
           className={`w-[40px] h-[40px] object-cover bg-text-100 rounded-md`}
         />
       </Link>
