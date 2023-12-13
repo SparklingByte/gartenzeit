@@ -58,6 +58,7 @@ export default function DeleteHarvestButton({
         text='Delete harvest'
         showIcon={false}
         disabled={loading.isLoading}
+        color='warning'
         onClick={() => {
           handleHarvestDelete();
         }}
