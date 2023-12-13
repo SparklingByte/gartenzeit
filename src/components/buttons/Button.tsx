@@ -2,7 +2,7 @@ import { IoArrowForward } from 'react-icons/io5';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   text: string;
-  color?: 'light' | 'dark';
+  color: 'primary' | 'dark' | 'warning';
   disabled?: boolean;
   showIcon: boolean;
   isLoading?: boolean;
@@ -20,19 +20,22 @@ export default function Button({
   onClick,
   ...props
 }: ButtonProps) {
-  let backgroundStyling;
-  if (disabled) {
-    backgroundStyling = 'bg-semantic-disabled text-text-50 cursor-not-allowed';
-  } else {
-    backgroundStyling =
-      color === 'dark'
-        ? 'bg-primary-120 text-background-50'
-        : 'bg-primary-100 text-text-100';
-  }
+  color = color ? color : 'primary';
+
+  const disabledBackgroundStyling =
+    'bg-semantic-disabled text-text-50 cursor-not-allowed';
+
+  const backgroundStyling: { [key in ButtonProps['color']]: string } = {
+    dark: 'bg-primary-120 text-background-50',
+    primary: 'bg-primary-100 text-text-100',
+    warning: 'bg-semantic-warning text-text-50',
+  };
 
   return (
     <button
-      className={`flex items-center gap-3 p-3 rounded-md ${backgroundStyling}`}
+      className={`flex justify-between items-center gap-3 p-3 rounded-md ${
+        disabled ? disabledBackgroundStyling : backgroundStyling[color]
+      }`}
       {...props}
       onClick={disabled ? () => {} : onClick}
     >
