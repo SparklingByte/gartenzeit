@@ -9,8 +9,6 @@ type UserCardProps = {
   user: z.infer<typeof PublicUserDataSchema>;
 };
 
-const PROFILE_PICTURE_SIZE = 40;
-// TODO Replace with global constance
 const SUPABASE_STORAGE_URL =
   'https://fvmubtpjuonfgmaspyzn.supabase.co/storage/v1/object/public/user_avatars/';
 
@@ -20,10 +18,10 @@ export default function UserCard({ user }: UserCardProps) {
       <Link href={'/user/' + user.username}>
         <Image
           alt={`Profile picture of ${user.username}`}
-          width={PROFILE_PICTURE_SIZE}
-          height={PROFILE_PICTURE_SIZE}
-          src={SUPABASE_STORAGE_URL + user.image || ''} // TODO Replace with placeholder image
-          className='bg-text-100 rounded-md'
+          width={40}
+          height={40}
+          src={`${SUPABASE_STORAGE_URL}/${user.image}` || ''} // TODO Replace with placeholder image
+          className={`w-[40px] h-[40px] object-cover bg-text-100 rounded-md`}
         />
       </Link>
       <div>

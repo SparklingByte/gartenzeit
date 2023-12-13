@@ -27,7 +27,7 @@ export default function UserWelcomeCard({
           width={IMAGE_SIZE}
           height={IMAGE_SIZE}
           alt={`Profile picture from ${username}`}
-          className='rounded-xl cursor-pointer bg-background-100'
+          className={`w-[80x] h-[80px] object-cover bg-text-100 rounded-md cursor-pointer`}
         ></Image>
       </Link>
     </div>

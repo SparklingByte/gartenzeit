@@ -22,7 +22,7 @@ export default function AuthorCard({ user, isOwnProfile }: AuthorCardProps) {
         alt={`Profile picture of ${user.username}`}
         width={IMAGE_SIZE}
         height={IMAGE_SIZE}
-        className='bg-text-100 rounded-md'
+        className={`w-[25px] h-[25px] object-cover bg-text-100 rounded-md`}
       ></Image>
       <Paragraph>
         Hosted by{' '}
