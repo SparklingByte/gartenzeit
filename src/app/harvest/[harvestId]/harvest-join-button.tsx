@@ -109,6 +109,12 @@ export default function HarvestJoinButton({
         isLoading={loading.isLoading}
         loadingText={loading.text}
         text={text || 'Join'}
+        color={
+          participation?.status === 'CONFIRMED' ||
+          participation?.status === 'PENDING'
+            ? 'warning'
+            : 'primary'
+        }
         disabled={
           participation?.status === 'REJECTED' ||
           harvest.hostUserId === userId ||
