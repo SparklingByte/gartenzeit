@@ -84,7 +84,7 @@ export default async function HarvestPage({
     })[0];
 
   return (
-    <main className='p-5 grid gap-10'>
+    <main className='relative p-5 grid gap-10'>
       <TopActionMenuBar hasBackItem hasSettingsItem={isHost} />
       {harvestIsAlreadyOver && (
         <AlertBox
@@ -125,7 +125,7 @@ export default async function HarvestPage({
           }
         ></TextCard>
       </section>
-      <section className='grid gap-5'>
+      <section className='grid gap-5 mb-40'>
         <SectionTitle title='Who is going to come?'></SectionTitle>
         {allConfirmedParticipations.length > 0 ? (
           allConfirmedParticipations
@@ -136,36 +136,38 @@ export default async function HarvestPage({
           ></TextCard>
         )}
       </section>
-      <section className='p-5 bg-background-50 rounded-xl'>
-        {harvestIsAlreadyOver ? (
-          <span className='text-center'>
-            <Paragraph>This harvest is already over</Paragraph>
-          </span>
-        ) : (
-          <div className='grid flex-col align-center w-100 gap-5'>
-            {userHarvestParticipationStatus && (
-              <StatusIndicator
-                text={
-                  userHarvestParticipationStatus.status === 'CONFIRMED'
-                    ? 'Your participation was confirmed'
-                    : userHarvestParticipationStatus.status === 'PENDING'
-                    ? 'Your request is pending'
-                    : 'Your request was rejected'
-                }
-                color={
-                  userHarvestParticipationStatus.status === 'CONFIRMED'
-                    ? 'green'
-                    : 'red'
-                }
-              ></StatusIndicator>
-            )}
-            <HarvestJoinButton
-              harvest={harvest}
-              userId={user.id}
-              participation={userHarvestParticipationStatus}
-            ></HarvestJoinButton>
-          </div>
-        )}
+      <section className='fixed w-full bottom-24 px-5 pb-10 pt-10 bg-gradient-to-t from-background-100 from-70% to-transparent'>
+        <div className='p-5 bg-background-50 rounded-xl'>
+          {harvestIsAlreadyOver ? (
+            <span className='text-center'>
+              <Paragraph>This harvest is already over</Paragraph>
+            </span>
+          ) : (
+            <div className='grid flex-col align-center w-100 gap-5'>
+              {userHarvestParticipationStatus && (
+                <StatusIndicator
+                  text={
+                    userHarvestParticipationStatus.status === 'CONFIRMED'
+                      ? 'Your participation was confirmed'
+                      : userHarvestParticipationStatus.status === 'PENDING'
+                      ? 'Your request is pending'
+                      : 'Your request was rejected'
+                  }
+                  color={
+                    userHarvestParticipationStatus.status === 'CONFIRMED'
+                      ? 'green'
+                      : 'red'
+                  }
+                ></StatusIndicator>
+              )}
+              <HarvestJoinButton
+                harvest={harvest}
+                userId={user.id}
+                participation={userHarvestParticipationStatus}
+              ></HarvestJoinButton>
+            </div>
+          )}
+        </div>
       </section>
     </main>
   );
