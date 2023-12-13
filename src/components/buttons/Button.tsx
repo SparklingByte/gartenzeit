@@ -28,7 +28,7 @@ export default function Button({
   const backgroundStyling: { [key in ButtonProps['color']]: string } = {
     dark: 'bg-primary-120 text-background-50',
     primary: 'bg-primary-100 text-text-100',
-    warning: 'bg-semantic-warning text-text-50',
+    warning: 'bg-semantic-warning text-background-50',
   };
 
   return (
