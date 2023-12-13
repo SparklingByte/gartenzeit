@@ -15,6 +15,7 @@ export default function LogoutButton() {
         setShowButtonLoading(true);
         signOut();
       }}
+      color={'warning'}
       disabled={showButtonLoading}
       text='Logout'
       showIcon={false}
