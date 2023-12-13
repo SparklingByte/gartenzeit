@@ -57,7 +57,7 @@ export default function ChangeDescriptionForm({
     }
 
     setAlert({
-      title: 'Success',
+      title: 'Saved',
       message: 'The description was successfully updated.',
       status: 'success',
     });
