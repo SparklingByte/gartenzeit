@@ -119,7 +119,7 @@ export default async function HarvestPage({
         <TextCard
           title='Time and date'
           text={
-            harvest.dateTime.toLocaleDateString() +
+            harvest.dateTime.toDateString() +
             ' | ' +
             harvest.dateTime.toLocaleTimeString()
           }
