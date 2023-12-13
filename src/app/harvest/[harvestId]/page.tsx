@@ -136,7 +136,7 @@ export default async function HarvestPage({
           ></TextCard>
         )}
       </section>
-      <section className='fixed w-full bottom-24 px-5 pb-10 pt-10 bg-gradient-to-t from-background-100 from-70% to-transparent'>
+      <section className='fixed w-full bottom-24 px-5 pb-10 pt-24 bg-gradient-to-t from-background-100 from-50% to-transparent'>
         <div className='p-5 bg-background-50 rounded-xl'>
           {harvestIsAlreadyOver ? (
             <span className='text-center'>
