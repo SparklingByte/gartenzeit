@@ -142,7 +142,6 @@ export default async function Home() {
       <section className='mb-10'>
         <UserWelcomeCard
           username={userData?.username || 'Unknown User'}
-          // TODO Replace with placeholder image
           userProfileImage={userData?.image || ''}
         />
       </section>
