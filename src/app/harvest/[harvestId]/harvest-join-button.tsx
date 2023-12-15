@@ -33,25 +33,6 @@ export default function HarvestJoinButton({
 
   const isHost = harvest.hostUserId === userId;
 
-  async function getUserParticipation() {
-    const res = await fetch(`/api/harvests/${harvest.id}/participations`, {
-      method: 'GET',
-    });
-
-    const resBody: {
-      userId: string;
-      status: UserHarvestParticipationStatus;
-    }[] = await res.json();
-
-    const participation = resBody.filter((participation) => {
-      return participation.userId === userId;
-    })[0];
-
-    console.log(participation);
-
-    return participation;
-  }
-
   async function handleJoinHarvest() {
     setLoading({ isLoading: true, text: 'Joining harvest...' });
     const res = await fetch(`/api/harvests/${harvest.id}/participations`, {
