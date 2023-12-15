@@ -6,12 +6,6 @@ import chalk from 'chalk';
 import { z } from 'zod';
 import { getServerSession } from 'next-auth';
 
-type UserIdParams = {
-  params: {
-    userId: string;
-  };
-};
-
 async function getUser(userEmail: string) {
   try {
     const user = await prisma.user.findUniqueOrThrow({
