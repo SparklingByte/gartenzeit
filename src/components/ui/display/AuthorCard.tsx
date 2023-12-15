@@ -1,7 +1,6 @@
 import { Paragraph } from '@/components/typography/Typography';
 import { PublicUserDataSchema } from '@/lib/schemas';
 import Image from 'next/image';
-import Link from 'next/link';
 import { z } from 'zod';
 
 type AuthorCardProps = {
