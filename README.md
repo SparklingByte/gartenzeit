@@ -14,14 +14,14 @@ I've created this app for CS50x as my final project during my gap year in New Ze
 
 ### NextJS framework
 
-- I wanted to use React, and it is recommended to use a framework to use react
-- Can have backend and front end in the same codespace
-- Easy to get started, many built in functionality
+- I decided to use React but it is recommended to use a framework like NextJS
+- I Can have backend and front end in the same codespace
+- It's easy to get started, has many built in functionality
 
 ### NextAuth
 
 - Easy authentication of users -> login and registering of new users
-- Unfortunately, poor documentation in my opinion, would like to have a better option
+- Unfortunately, poor documentation in my opinion, I would prefer a more clear tool next time
 
 ### Prisma ORM
 
@@ -31,12 +31,12 @@ I've created this app for CS50x as my final project during my gap year in New Ze
 
 ### Supabase
 
-- Only used for hosting the database (postgresql) & data storage for user profile images (storage bucket)
+- Only used for hosting the database (postgreSQL) & data storage for user profile images (storage bucket)
 - Easy to manage data in database with web GUI
 
 ### Storybook
 
-- For easy component development and testing (can test and view components without the need to add them to a page)
+- For easy component development and testing (can test and view components without the need to add them to a page by using a web GUI)
 
 ### zod
 
