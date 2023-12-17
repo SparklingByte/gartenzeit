@@ -8,7 +8,7 @@ export default async function LoginPage() {
   await redirectLoggedInUser('/');
   return (
     <main className='h-screen flex justify-center items-center p-5'>
-      <div className='w-1/2'>
+      <div className='w-96'>
         <div className='text-center mb-10'>
           <PageTitle title={'Welcome Back To Gartenzeit'} />
         </div>
