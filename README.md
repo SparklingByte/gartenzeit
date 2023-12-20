@@ -2,7 +2,7 @@
 
 ## Video Demo
 
-- coming soon
+https://www.youtube.com/watch?v=q9ZuNWrdI5I
 
 ## Description
 
