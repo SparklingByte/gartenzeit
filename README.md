@@ -1,8 +1,6 @@
 # Gartenzeit
 
-## Video Demo
-
-https://www.youtube.com/watch?v=q9ZuNWrdI5I
+[Project page on my website](https://nico-maertin.com/projects/gartenzeit)
 
 ## Description
 
